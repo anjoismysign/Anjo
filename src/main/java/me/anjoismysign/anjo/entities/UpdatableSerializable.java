@@ -1,7 +1,5 @@
 package me.anjoismysign.anjo.entities;
 
-import com.mongodb.lang.Nullable;
-
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
 import java.sql.Blob;
@@ -12,6 +10,10 @@ public class UpdatableSerializable implements Serializable {
 
     private Serializable value;
 
+    /**
+     * @param updatableSerializable the object to be serialized
+     * @return byte array if succesful, null otherwise
+     */
     public static byte[] serialize(UpdatableSerializable updatableSerializable) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutput out = null;
@@ -28,7 +30,10 @@ public class UpdatableSerializable implements Serializable {
         return null;
     }
 
-    @Nullable
+    /**
+     * @param updatableSerializable the object to be serialized
+     * @return SerialBlob if successful, null if not
+     */
     public static SerialBlob blobSerialize(UpdatableSerializable updatableSerializable) {
         byte[] bytes = serialize(updatableSerializable);
         SerialBlob blob = null;
@@ -41,6 +46,10 @@ public class UpdatableSerializable implements Serializable {
         return blob;
     }
 
+    /**
+     * @param bytes the byte array to be deserialized
+     * @return UpdatableSerializable if successful, null otherwise
+     */
     public static UpdatableSerializable deserialize(byte[] bytes) {
         UpdatableSerializable updatableSerializable;
         if (bytes == null)
@@ -57,6 +66,10 @@ public class UpdatableSerializable implements Serializable {
         return null;
     }
 
+    /**
+     * @param blob the blob to be deserialized
+     * @return UpdatableSerializable if successful, null otherwise
+     */
     public static UpdatableSerializable deserialize(Blob blob) {
         ByteArrayResult result = blobToByteArray(blob);
         if (!result.isValid())
@@ -80,35 +93,35 @@ public class UpdatableSerializable implements Serializable {
     }
 
     /**
-     * Crea un objeto que permite actualizarse.
-     * La actualización se hace por parte de value,
-     * por ejemplo dentro de su constructor.
-     * Esto por ejemplo soluciona el típico
-     * problema en el que en una base de datos
-     * intentan serializar el objeto "Estudiante"
-     * cuyos atributos son String cédula,
-     * String nombreCompleto, int cuatrimestre.
-     * Típicamente intentan serializar todos estos
-     * atributos en cada campo de la base de datos,
-     * Ahora por ejemplo sólo tomaría un campo en
-     * lugar de 3. Si en algún momento por ejemplo
-     * quieren agregar el atributo boolean fueVacunado
-     * pueden simplemente agregar el atributo y
-     * revisar si la version ya tenia ese boolean.
-     * De no ser asi se lee como la vieja version y
-     * se pasan los atributos al nuevo objeto con dicho
-     * atributo.
+     * Creates an object that can be updated.
+     * The update is done by value,
+     * for example within its constructor.
+     * This for example solves the typical
+     * problem in which in a database
+     * they try to serialize the object "Student"
+     * whose attributes are String id,
+     * String fullName, int semester.
+     * Typically they try to serialize all these
+     * attributes in each field of the database,
+     * Now for example it would only take one field
+     * instead of 3. If at some point for example
+     * they want to add the attribute boolean wasVaccinated
+     * they can simply add the attribute and
+     * check if the version already had that boolean.
+     * If not, it is read as the old version and
+     * the attributes are passed to the new object with that
+     * attribute.
      *
-     * @param version Versión del objeto serializable.
-     * @param value   El objeto serializable.
+     * @param version Version of the serializable object.
+     * @param value   The serializable object.
      */
     public UpdatableSerializable(int version, Serializable value) {
         this.version = version;
-        this.version = version;
+        this.value = value;
     }
 
     /**
-     * @return La versión del objeto serializable.
+     * @return value's version
      */
     public int getVersion() {
         return version;
@@ -119,7 +132,7 @@ public class UpdatableSerializable implements Serializable {
     }
 
     /**
-     * @return El objeto serializable.
+     * @return The object that is serializable and updatable.
      */
     public Serializable getValue() {
         return value;

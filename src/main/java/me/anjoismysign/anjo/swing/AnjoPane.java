@@ -124,6 +124,8 @@ public class AnjoPane {
         }
     }
 
+
+
     /**
      * Casts AnjoPane#getComponent to a JTextField and returns it.
      *

@@ -17,7 +17,6 @@ public class ResourceLib {
      * @return The InputStream of the file. null if not found.
      */
     public InputStream getFileFromResourceAsStream(String fileName) {
-
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
 
@@ -35,7 +34,6 @@ public class ResourceLib {
      * @return The BufferedImage of the file. null if not found.
      */
     public BufferedImage getImageFromResourceAsStream(String fileName) {
-
         BufferedImage img = null;
         try {
             img = ImageIO.read(getFileFromResourceAsStream(fileName));
@@ -43,6 +41,5 @@ public class ResourceLib {
             e.printStackTrace();
         }
         return img;
-
     }
 }

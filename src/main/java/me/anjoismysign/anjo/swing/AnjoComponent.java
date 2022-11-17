@@ -1,6 +1,7 @@
 package me.anjoismysign.anjo.swing;
 
 import javax.swing.*;
+import java.awt.event.MouseListener;
 
 /**
  * @author anjoismysign
@@ -72,5 +73,14 @@ public class AnjoComponent {
      */
     public void setComponent(JComponent component) {
         this.component = component;
+    }
+
+    /**
+     * will add a mouse listener to the component
+     *
+     * @param listener the listener to add
+     */
+    public void addMouseListener(MouseListener listener) {
+        component.addMouseListener(listener);
     }
 }

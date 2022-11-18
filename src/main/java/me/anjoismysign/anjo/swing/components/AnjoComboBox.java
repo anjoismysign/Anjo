@@ -3,6 +3,7 @@ package me.anjoismysign.anjo.swing.components;
 import me.anjoismysign.anjo.swing.AnjoComponent;
 
 import javax.swing.*;
+import java.awt.event.ItemListener;
 import java.util.Collection;
 
 public class AnjoComboBox extends AnjoComponent {
@@ -36,5 +37,17 @@ public class AnjoComboBox extends AnjoComponent {
 
     public JComboBox<String> getComboBox() {
         return comboBox;
+    }
+
+    public void addItemListener(ItemListener listener) {
+        comboBox.addItemListener(listener);
+    }
+
+    public void addItem(String item) {
+        comboBox.addItem(item);
+    }
+
+    public void removeItem(String item) {
+        comboBox.removeItem(item);
     }
 }

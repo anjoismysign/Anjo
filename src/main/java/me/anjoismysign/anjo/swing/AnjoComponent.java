@@ -1,6 +1,7 @@
 package me.anjoismysign.anjo.swing;
 
 import javax.swing.*;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
 /**
@@ -82,5 +83,14 @@ public class AnjoComponent {
      */
     public void addMouseListener(MouseListener listener) {
         component.addMouseListener(listener);
+    }
+
+    /**
+     * will add a key listener to the component
+     *
+     * @param listener the listener to add
+     */
+    public void addKeyListener(KeyListener listener) {
+        component.addKeyListener(listener);
     }
 }

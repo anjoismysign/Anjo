@@ -109,6 +109,7 @@ public class AnjoTextValidateListener extends AnjoConsumerListener implements Ke
             }
         }
         if (validResult == true && valid == true || validResult == false && valid == false) {
+            System.out.println("validResult: " + validResult + " valid: " + valid);
             getConsumer().accept(getAnjoComponent());
         }
     }

@@ -146,13 +146,17 @@ public class AnjoTextField extends AnjoComponent {
      */
     public IntegerResult getInteger() {
         JTextField component = getComponent();
-        if (component == null)
+        if (component == null) {
+            System.out.println("A");
             return new IntegerResult(0, false);
+        }
         int value;
         try {
             value = Integer.parseInt(component.getText());
             return new IntegerResult(value, true);
         } catch (NumberFormatException e) {
+            System.out.println("B");
+            e.printStackTrace();
             return new IntegerResult(0, false);
         }
     }

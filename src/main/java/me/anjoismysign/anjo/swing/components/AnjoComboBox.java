@@ -39,15 +39,18 @@ public class AnjoComboBox extends AnjoComponent {
         return comboBox;
     }
 
-    public void addItemListener(ItemListener listener) {
+    public AnjoComboBox addItemListener(ItemListener listener) {
         comboBox.addItemListener(listener);
+        return this;
     }
 
-    public void addItem(String item) {
+    public AnjoComponent addItem(String item) {
         comboBox.addItem(item);
+        return this;
     }
 
-    public void removeItem(String item) {
+    public AnjoComponent removeItem(String item) {
         comboBox.removeItem(item);
+        return this;
     }
 }

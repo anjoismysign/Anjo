@@ -39,8 +39,9 @@ public class AnjoProgressBar extends AnjoComponent {
         return progressBar;
     }
 
-    public void setValue(int value) {
+    public AnjoProgressBar setValue(int value) {
         progressBar.setValue(value);
+        return this;
     }
 
     public int getMin() {

@@ -125,7 +125,6 @@ public class AnjoPane {
     }
 
 
-
     /**
      * Casts AnjoPane#getComponent to a JTextField and returns it.
      *
@@ -307,6 +306,26 @@ public class AnjoPane {
         } catch (NumberFormatException e) {
             return new DoubleResult(0, false);
         }
+    }
+
+    /**
+     * Gets a character of an index.
+     * A useful method to validate!
+     *
+     * @param index The index of the row
+     * @return The result. Always check with CharacterResult#isValid
+     * due that if it being "false" meaning it's not a char.
+     * An example of not being a char is if the text is more than a single character.
+     * @see CharacterResult
+     */
+    public CharacterResult getCharacter(int index) {
+        JTextField textField = getJTextField(index);
+        if (textField == null)
+            return new CharacterResult('0', false);
+        String text = textField.getText();
+        if (text.length() == 1)
+            return new CharacterResult(text.charAt(0), true);
+        return new CharacterResult('0', false);
     }
 
     /**

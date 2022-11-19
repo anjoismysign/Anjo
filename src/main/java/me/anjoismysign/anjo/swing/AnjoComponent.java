@@ -47,8 +47,9 @@ public class AnjoComponent {
      *
      * @param label the label to set
      */
-    public void setLabel(JLabel label) {
+    public AnjoComponent setLabel(JLabel label) {
         this.label = label;
+        return this;
     }
 
     /**
@@ -56,8 +57,9 @@ public class AnjoComponent {
      *
      * @param label the label to set
      */
-    public void setLabel(String label) {
+    public AnjoComponent setLabel(String label) {
         this.label = new JLabel(label);
+        return this;
     }
 
     /**
@@ -72,8 +74,9 @@ public class AnjoComponent {
      *
      * @param component the component to set
      */
-    public void setComponent(JComponent component) {
+    public AnjoComponent setComponent(JComponent component) {
         this.component = component;
+        return this;
     }
 
     /**
@@ -81,8 +84,9 @@ public class AnjoComponent {
      *
      * @param listener the listener to add
      */
-    public void addMouseListener(MouseListener listener) {
+    public AnjoComponent addMouseListener(MouseListener listener) {
         component.addMouseListener(listener);
+        return this;
     }
 
     /**
@@ -90,7 +94,8 @@ public class AnjoComponent {
      *
      * @param listener the listener to add
      */
-    public void addKeyListener(KeyListener listener) {
+    public AnjoComponent addKeyListener(KeyListener listener) {
         component.addKeyListener(listener);
+        return this;
     }
 }

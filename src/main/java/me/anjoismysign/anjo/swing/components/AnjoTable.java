@@ -46,8 +46,9 @@ public class AnjoTable extends AnjoComponent {
      *                    <pre>String[][] data = {{"1", "2", "3"},{"4", "5", "6"},{"7", "8", "9"}};</pre>
      *                    This will assign 1,2 and 3 to row '0', 4,5 and 6 to row '1' and 7,8 and 9 to row 2.
      */
-    public void updateModel(String[] columnNames, Object[][] data) {
+    public AnjoTable updateModel(String[] columnNames, Object[][] data) {
         updateModel(new DefaultTableModel(data, columnNames));
+        return this;
     }
 
     /**
@@ -55,7 +56,8 @@ public class AnjoTable extends AnjoComponent {
      *
      * @param model the model to set
      */
-    public void updateModel(TableModel model) {
+    public AnjoTable updateModel(TableModel model) {
         getTable().setModel(model);
+        return this;
     }
 }

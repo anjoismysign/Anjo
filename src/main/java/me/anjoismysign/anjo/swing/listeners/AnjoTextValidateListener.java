@@ -1,7 +1,6 @@
 package me.anjoismysign.anjo.swing.listeners;
 
 import me.anjoismysign.anjo.entities.*;
-import me.anjoismysign.anjo.libraries.AlgorithmLib;
 import me.anjoismysign.anjo.swing.AnjoComponent;
 import me.anjoismysign.anjo.swing.components.AnjoTextField;
 
@@ -80,7 +79,6 @@ public class AnjoTextValidateListener extends AnjoConsumerListener implements Ke
     public void keyTyped(KeyEvent e) {
         boolean validResult = true;
         System.out.println("1. validResult: " + validResult);
-        AlgorithmLib.ThreadSleep(50);
         switch (type) {
             case BYTE -> {
                 ByteResult result = getAnjoComponent().getByte();
@@ -125,6 +123,6 @@ public class AnjoTextValidateListener extends AnjoConsumerListener implements Ke
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        System.out.println("keyReleased: " + getAnjoComponent().getComponent().getText());
     }
 }

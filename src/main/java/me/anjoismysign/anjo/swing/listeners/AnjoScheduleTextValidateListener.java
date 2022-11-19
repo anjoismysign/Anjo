@@ -85,11 +85,9 @@ public class AnjoScheduleTextValidateListener extends AnjoTextValidateListener i
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (e.getID() != KeyEvent.KEY_TYPED)
-            return;
         if (this.transcurred - System.currentTimeMillis() > this.maxTranscurred) {
             this.transcurred = System.currentTimeMillis();
-            run();
+            super.keyTyped(e);
         }
     }
 

@@ -77,12 +77,6 @@ public class AnjoTextValidateListener extends AnjoConsumerListener implements Ke
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (e.getID() != KeyEvent.KEY_TYPED)
-            return;
-        run();
-    }
-
-    public void run() {
         boolean validResult = true;
         switch (type) {
             case BYTE -> {

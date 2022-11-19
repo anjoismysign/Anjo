@@ -5,6 +5,8 @@ import me.anjoismysign.anjo.swing.AnjoComponent;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 
 public class AnjoTable extends AnjoComponent {
     private JTable table;
@@ -32,8 +34,59 @@ public class AnjoTable extends AnjoComponent {
         this.table = jTable;
     }
 
-    public JTable getTable() {
-        return table;
+    /**
+     * sets the label
+     *
+     * @param label the label to set
+     */
+    public AnjoTable label(JLabel label) {
+        super.label(label);
+        return this;
+    }
+
+    /**
+     * sets the label. will be converted to a JLabel
+     *
+     * @param label the label to set
+     */
+    public AnjoTable label(String label) {
+        super.label(label);
+        return this;
+    }
+
+    /**
+     * will set the component
+     *
+     * @param component the component to set
+     */
+    public AnjoTable component(JComponent component) {
+        super.component(component);
+        return this;
+    }
+
+    /**
+     * will add a mouse listener to the component
+     *
+     * @param listener the listener to add
+     */
+    public AnjoTable addMouseListener(MouseListener listener) {
+        super.addMouseListener(listener);
+        return this;
+    }
+
+    /**
+     * will add a key listener to the component
+     *
+     * @param listener the listener to add
+     */
+    public AnjoTable addKeyListener(KeyListener listener) {
+        super.addKeyListener(listener);
+        return this;
+    }
+
+    @Override
+    public JTable getComponent() {
+        return (JTable) super.getComponent();
     }
 
     /**
@@ -57,7 +110,7 @@ public class AnjoTable extends AnjoComponent {
      * @param model the model to set
      */
     public AnjoTable updateModel(TableModel model) {
-        getTable().setModel(model);
+        table.setModel(model);
         return this;
     }
 }

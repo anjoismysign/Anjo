@@ -3,6 +3,8 @@ package me.anjoismysign.anjo.swing.components.progressbar;
 import me.anjoismysign.anjo.swing.AnjoComponent;
 
 import javax.swing.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 
 public class AnjoProgressBar extends AnjoComponent {
     private JProgressBar progressBar;
@@ -35,8 +37,60 @@ public class AnjoProgressBar extends AnjoComponent {
         this.progressBar = progressBar;
     }
 
-    public JProgressBar getProgressBar() {
-        return progressBar;
+
+    /**
+     * sets the label
+     *
+     * @param label the label to set
+     */
+    public AnjoProgressBar label(JLabel label) {
+        super.label(label);
+        return this;
+    }
+
+    /**
+     * sets the label. will be converted to a JLabel
+     *
+     * @param label the label to set
+     */
+    public AnjoProgressBar label(String label) {
+        super.label(label);
+        return this;
+    }
+
+    /**
+     * will set the component
+     *
+     * @param component the component to set
+     */
+    public AnjoProgressBar component(JComponent component) {
+        super.component(component);
+        return this;
+    }
+
+    /**
+     * will add a mouse listener to the component
+     *
+     * @param listener the listener to add
+     */
+    public AnjoProgressBar addMouseListener(MouseListener listener) {
+        super.addMouseListener(listener);
+        return this;
+    }
+
+    /**
+     * will add a key listener to the component
+     *
+     * @param listener the listener to add
+     */
+    public AnjoProgressBar addKeyListener(KeyListener listener) {
+        super.addKeyListener(listener);
+        return this;
+    }
+
+    @Override
+    public JProgressBar getComponent() {
+        return (JProgressBar) super.getComponent();
     }
 
     public AnjoProgressBar setValue(int value) {

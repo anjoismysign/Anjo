@@ -30,7 +30,7 @@ public class AnjoComponent {
     }
 
     /**
-     * empty constructor. you need to call {@link #setLabel(String)} and {@link #setComponent(JComponent)}}
+     * empty constructor. you need to call {@link #setLabel(String)} and {@link #component(JComponent)}}
      */
     public AnjoComponent() {
     }
@@ -43,12 +43,30 @@ public class AnjoComponent {
     }
 
     /**
+     * sets the label. will be converted to a JLabel
+     *
+     * @param label the label to set
+     */
+    public void setLabel(String label) {
+        this.label = new JLabel(label);
+    }
+
+    /**
      * sets the label
      *
      * @param label the label to set
      */
-    public AnjoComponent setLabel(JLabel label) {
+    public void setLabel(JLabel label) {
         this.label = label;
+    }
+
+    /**
+     * sets the label
+     *
+     * @param label the label to set
+     */
+    public AnjoComponent label(JLabel label) {
+        setLabel(label);
         return this;
     }
 
@@ -57,8 +75,8 @@ public class AnjoComponent {
      *
      * @param label the label to set
      */
-    public AnjoComponent setLabel(String label) {
-        this.label = new JLabel(label);
+    public AnjoComponent label(String label) {
+        setLabel(label);
         return this;
     }
 
@@ -74,8 +92,17 @@ public class AnjoComponent {
      *
      * @param component the component to set
      */
-    public AnjoComponent setComponent(JComponent component) {
+    public void setComponent(JComponent component) {
         this.component = component;
+    }
+
+    /**
+     * will set the component
+     *
+     * @param component the component to set
+     */
+    public AnjoComponent component(JComponent component) {
+        setComponent(component);
         return this;
     }
 

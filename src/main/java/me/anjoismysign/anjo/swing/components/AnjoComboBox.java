@@ -4,6 +4,8 @@ import me.anjoismysign.anjo.swing.AnjoComponent;
 
 import javax.swing.*;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.util.Collection;
 
 public class AnjoComboBox extends AnjoComponent {
@@ -35,8 +37,59 @@ public class AnjoComboBox extends AnjoComponent {
         this.comboBox = comboBox;
     }
 
-    public JComboBox<String> getComboBox() {
-        return comboBox;
+    /**
+     * sets the label
+     *
+     * @param label the label to set
+     */
+    public AnjoComboBox label(JLabel label) {
+        super.label(label);
+        return this;
+    }
+
+    /**
+     * sets the label. will be converted to a JLabel
+     *
+     * @param label the label to set
+     */
+    public AnjoComboBox label(String label) {
+        super.label(label);
+        return this;
+    }
+
+    /**
+     * will set the component
+     *
+     * @param component the component to set
+     */
+    public AnjoComboBox component(JComponent component) {
+        super.component(component);
+        return this;
+    }
+
+    /**
+     * will add a mouse listener to the component
+     *
+     * @param listener the listener to add
+     */
+    public AnjoComboBox addMouseListener(MouseListener listener) {
+        super.addMouseListener(listener);
+        return this;
+    }
+
+    /**
+     * will add a key listener to the component
+     *
+     * @param listener the listener to add
+     */
+    public AnjoComboBox addKeyListener(KeyListener listener) {
+        super.addKeyListener(listener);
+        return this;
+    }
+
+    @Override
+    public JComboBox getComponent() {
+        return (JComboBox) super.getComponent();
     }
 
     public AnjoComboBox addItemListener(ItemListener listener) {
@@ -44,12 +97,12 @@ public class AnjoComboBox extends AnjoComponent {
         return this;
     }
 
-    public AnjoComponent addItem(String item) {
+    public AnjoComboBox addItem(String item) {
         comboBox.addItem(item);
         return this;
     }
 
-    public AnjoComponent removeItem(String item) {
+    public AnjoComboBox removeItem(String item) {
         comboBox.removeItem(item);
         return this;
     }

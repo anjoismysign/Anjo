@@ -1,5 +1,8 @@
 package me.anjoismysign.anjo.swing;
 
+import me.anjoismysign.anjo.swing.listeners.AnjoClickListener;
+import me.anjoismysign.anjo.swing.listeners.AnjoKeynputListener;
+
 import javax.swing.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -123,6 +126,27 @@ public class AnjoComponent {
      */
     public AnjoComponent addKeyListener(KeyListener listener) {
         component.addKeyListener(listener);
+        return this;
+    }
+
+    /**
+     * Will add an AnjoClickListener to the component
+     *
+     * @param runnable the runnable to be run when the component is clicked
+     */
+    public AnjoComponent addAnjoClickListener(Runnable runnable) {
+        addMouseListener(AnjoClickListener.build(this, runnable));
+        return this;
+    }
+
+    /**
+     * Will add an AnjoKeynputListener to the component
+     *
+     * @param runnable the runnable to be run when receiving a key input from the component
+     * @param inputs   the inputs to listen for
+     */
+    public AnjoComponent addAnjoKeynputListener(Runnable runnable, char[] inputs) {
+        addKeyListener(AnjoKeynputListener.build(this, runnable, inputs));
         return this;
     }
 }

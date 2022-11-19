@@ -3,6 +3,7 @@ package me.anjoismysign.anjo.swing.listeners;
 import me.anjoismysign.anjo.swing.AnjoComponent;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -44,7 +45,8 @@ public class AnjoKeynputListener implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (e.getID() != KeyEvent.KEY_TYPED)
+        Component component = e.getComponent();
+        if (!component.equals(getComponent()))
             return;
         char input = e.getKeyChar();
         for (char character : inputs) {

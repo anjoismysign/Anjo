@@ -1,6 +1,8 @@
 package me.anjoismysign.anjo.swing.components.progressbar;
 
 import me.anjoismysign.anjo.swing.AnjoComponent;
+import me.anjoismysign.anjo.swing.listeners.AnjoClickListener;
+import me.anjoismysign.anjo.swing.listeners.AnjoKeynputListener;
 
 import javax.swing.*;
 import java.awt.event.KeyListener;
@@ -85,6 +87,27 @@ public class AnjoProgressBar extends AnjoComponent {
      */
     public AnjoProgressBar addKeyListener(KeyListener listener) {
         super.addKeyListener(listener);
+        return this;
+    }
+
+    /**
+     * Will add an AnjoClickListener to the component
+     *
+     * @param runnable the runnable to be run when the component is clicked
+     */
+    public AnjoProgressBar addAnjoClickListener(Runnable runnable) {
+        addMouseListener(AnjoClickListener.build(this, runnable));
+        return this;
+    }
+
+    /**
+     * Will add an AnjoKeynputListener to the component
+     *
+     * @param runnable the runnable to be run when receiving a key input from the component
+     * @param inputs   the inputs to listen for
+     */
+    public AnjoProgressBar addAnjoKeynputListener(Runnable runnable, char[] inputs) {
+        addKeyListener(AnjoKeynputListener.build(this, runnable, inputs));
         return this;
     }
 

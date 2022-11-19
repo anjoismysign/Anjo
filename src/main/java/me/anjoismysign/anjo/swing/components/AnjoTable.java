@@ -9,9 +9,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
+import java.util.function.Consumer;
 
 public class AnjoTable extends AnjoComponent {
-    private JTable table;
+    private final JTable table;
 
     /**
      * @param columnNames Column names.
@@ -24,11 +25,7 @@ public class AnjoTable extends AnjoComponent {
      */
     public static AnjoTable build(String[] columnNames, Object[][] data) {
         JTable table = new JTable(data, columnNames);
-        return new AnjoTable(table);
-    }
-
-    public AnjoTable(JTable jTable) {
-        new AnjoTable("", jTable);
+        return new AnjoTable("", table);
     }
 
     public AnjoTable(String label, JTable jTable) {
@@ -89,21 +86,21 @@ public class AnjoTable extends AnjoComponent {
     /**
      * Will add an AnjoClickListener to the component
      *
-     * @param runnable the runnable to be run when the component is clicked
+     * @param consumer the consumer to accept when the component is clicked
      */
-    public AnjoTable addAnjoClickListener(Runnable runnable) {
-        addMouseListener(AnjoClickListener.build(this, runnable));
+    public AnjoTable addAnjoClickListener(Consumer<AnjoComponent> consumer) {
+        addMouseListener(AnjoClickListener.build(this, consumer));
         return this;
     }
 
     /**
      * Will add an AnjoKeynputListener to the component
      *
-     * @param runnable the runnable to be run when receiving a key input from the component
+     * @param consumer the consumer to accept when receiving a key input from the component
      * @param inputs   the inputs to listen for
      */
-    public AnjoTable addAnjoKeynputListener(Runnable runnable, char[] inputs) {
-        addKeyListener(AnjoKeynputListener.build(this, runnable, inputs));
+    public AnjoTable addAnjoKeynputListener(Consumer<AnjoComponent> consumer, char[] inputs) {
+        addKeyListener(AnjoKeynputListener.build(this, consumer, inputs));
         return this;
     }
 

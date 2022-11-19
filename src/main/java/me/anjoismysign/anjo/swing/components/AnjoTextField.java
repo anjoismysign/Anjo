@@ -5,8 +5,10 @@ import me.anjoismysign.anjo.swing.AnjoComponent;
 import me.anjoismysign.anjo.swing.listeners.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
+import java.util.function.Consumer;
 
 public class AnjoTextField extends AnjoComponent {
 
@@ -247,10 +249,26 @@ public class AnjoTextField extends AnjoComponent {
      * Will add an AnjoTextValidateListener
      *
      * @param type     The desired input type variable.
-     * @param runnable The runnable to run in case the text is not valid.
+     * @param consumer The consumer to accept in case the text is not valid.
      */
-    public AnjoTextField addAnjoTextValidateListener(TextInputType type, Runnable runnable) {
-        addKeyListener(AnjoTextValidateListener.build(this, type, runnable));
+    public AnjoTextField addAnjoTextValidateListener(TextInputType type,
+                                                     Consumer<AnjoComponent> consumer,
+                                                     boolean valid) {
+        addKeyListener(AnjoTextValidateListener.build(this, type, consumer, valid));
+        return this;
+    }
+
+    /**
+     * Will add an AnjoTextValidateListener that will color text
+     * if met the input type and valid.
+     *
+     * @param type  The desired input type variable.
+     * @param color The color to set if valid.
+     * @param valid If the text is valid or not.
+     * @return
+     */
+    public AnjoTextField addColorToText(TextInputType type, Color color, boolean valid) {
+        addKeyListener(AnjoTextValidateListener.colorText(this, type, color, valid));
         return this;
     }
 
@@ -258,32 +276,51 @@ public class AnjoTextField extends AnjoComponent {
      * Will add an AnjoScheduleTextValidateListener
      *
      * @param type           The desired input type variable.
-     * @param runnable       The runnable to run in case the text is not valid.
-     * @param maxTranscurred The max transcurred time to run the runnable.
+     * @param consumer       The consumer to accept in case the text is not valid.
+     * @param maxTranscurred The max transcurred time to accept the consumer.
      */
-    public AnjoTextField addAnjoScheduledTextValidateListener(TextInputType type, Runnable runnable, long maxTranscurred) {
-        addKeyListener(AnjoScheduleTextValidateListener.build(this, type, runnable, maxTranscurred));
+    public AnjoTextField addAnjoScheduledTextValidateListener(TextInputType type,
+                                                              Consumer<AnjoComponent> consumer,
+                                                              long maxTranscurred, boolean valid) {
+        addKeyListener(AnjoScheduleTextValidateListener.build(this, type,
+                consumer, maxTranscurred, valid));
+        return this;
+    }
+
+    /**
+     * Will add an AnjoTextValidateListener that will color text
+     * if met the input type and valid.
+     *
+     * @param type           The desired input type variable.
+     * @param color          The color to set if valid.
+     * @param maxTranscurred The max transcurred time to accept the consumer.
+     * @param valid          If the text is valid or not.
+     * @return
+     */
+    public AnjoTextField addScheduleColorToText(TextInputType type, Color color, long maxTranscurred, boolean valid) {
+        addKeyListener(AnjoScheduleTextValidateListener.colorText(this, type,
+                color, maxTranscurred, valid));
         return this;
     }
 
     /**
      * Will add an AnjoClickListener to the component
      *
-     * @param runnable the runnable to be run when the component is clicked
+     * @param consumer the consumer to accept when the component is clicked
      */
-    public AnjoTextField addAnjoClickListener(Runnable runnable) {
-        addMouseListener(AnjoClickListener.build(this, runnable));
+    public AnjoTextField addAnjoClickListener(Consumer<AnjoComponent> consumer) {
+        addMouseListener(AnjoClickListener.build(this, consumer));
         return this;
     }
 
     /**
      * Will add an AnjoKeynputListener to the component
      *
-     * @param runnable the runnable to be run when receiving a key input from the component
+     * @param consumer the consumer to accept when receiving a key input from the component
      * @param inputs   the inputs to listen for
      */
-    public AnjoTextField addAnjoKeynputListener(Runnable runnable, char[] inputs) {
-        addKeyListener(AnjoKeynputListener.build(this, runnable, inputs));
+    public AnjoTextField addAnjoKeynputListener(Consumer<AnjoComponent> consumer, char[] inputs) {
+        addKeyListener(AnjoKeynputListener.build(this, consumer, inputs));
         return this;
     }
 }

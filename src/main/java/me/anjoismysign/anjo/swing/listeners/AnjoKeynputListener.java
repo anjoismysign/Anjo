@@ -2,27 +2,22 @@ package me.anjoismysign.anjo.swing.listeners;
 
 import me.anjoismysign.anjo.swing.AnjoComponent;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.function.Consumer;
 
-public class AnjoKeynputListener implements KeyListener {
-    private AnjoComponent component;
+public class AnjoKeynputListener extends AnjoConsumerListener implements KeyListener {
     private char[] inputs;
-    private Runnable runnable;
 
-    public static AnjoKeynputListener build(AnjoComponent component, Runnable runnable, char[] inputs) {
-        return new AnjoKeynputListener().component(component).runnable(runnable).inputs(inputs);
+    public static AnjoKeynputListener build(AnjoComponent component, Consumer<AnjoComponent> consumer, char[] inputs) {
+        return new AnjoKeynputListener().anjoComponent(component).consumer(consumer).inputs(inputs);
     }
 
-    public AnjoKeynputListener component(AnjoComponent component) {
-        this.component = component;
+    @Override
+    public AnjoKeynputListener anjoComponent(AnjoComponent component) {
+        super.anjoComponent(component);
         return this;
-    }
-
-    public JComponent getComponent() {
-        return component.getComponent();
     }
 
     public AnjoKeynputListener inputs(char[] inputs) {
@@ -34,13 +29,9 @@ public class AnjoKeynputListener implements KeyListener {
         return inputs;
     }
 
-    public AnjoKeynputListener runnable(Runnable runnable) {
-        this.runnable = runnable;
+    public AnjoKeynputListener consumer(Consumer<AnjoComponent> consumer) {
+        super.consumer(consumer);
         return this;
-    }
-
-    public Runnable getRunnable() {
-        return runnable;
     }
 
     @Override
@@ -53,7 +44,7 @@ public class AnjoKeynputListener implements KeyListener {
             if (input != character) {
                 continue;
             }
-            runnable.run();
+            getConsumer().accept(getAnjoComponent());
             break;
         }
     }

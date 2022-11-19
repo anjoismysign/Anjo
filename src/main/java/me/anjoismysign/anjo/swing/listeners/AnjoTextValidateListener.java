@@ -1,45 +1,55 @@
 package me.anjoismysign.anjo.swing.listeners;
 
 import me.anjoismysign.anjo.entities.*;
+import me.anjoismysign.anjo.swing.AnjoComponent;
 import me.anjoismysign.anjo.swing.components.AnjoTextField;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.function.Consumer;
 
-public class AnjoTextValidateListener implements KeyListener {
-    private AnjoTextField component;
-    private Runnable runnable;
+public class AnjoTextValidateListener extends AnjoConsumerListener implements KeyListener {
     private TextInputType type;
+    private boolean valid;
 
+    /**
+     * @param component The component to validate
+     * @param type      The type of input
+     * @param consumer  The consumer to accept when the input is not valid
+     * @return The listener
+     */
     public static AnjoTextValidateListener build(AnjoTextField component, TextInputType type,
-                                                 Runnable runnable) {
-        return new AnjoTextValidateListener().component(component)
-                .runnable(runnable).type(type);
+                                                 Consumer<AnjoComponent> consumer, boolean valid) {
+        return new AnjoTextValidateListener().anjoComponent(component)
+                .type(type).valid(valid).consumer(consumer);
     }
 
-    public AnjoTextField getComponent() {
-        return component;
+    public static AnjoTextValidateListener colorText(AnjoTextField component, TextInputType type,
+                                                     Color color, boolean valid) {
+        return build(component, type, c -> {
+            AnjoTextField textField = (AnjoTextField) c;
+            textField.getComponent().setForeground(color);
+        }, valid);
     }
 
-    public void setComponent(AnjoTextField component) {
-        this.component = component;
+    @Override
+    public AnjoTextField getAnjoComponent() {
+        return (AnjoTextField) super.getAnjoComponent();
     }
 
-    public AnjoTextValidateListener component(AnjoTextField component) {
-        setComponent(component);
-        return this;
+    @Override
+    public AnjoTextValidateListener anjoComponent(AnjoComponent component) {
+        if (component instanceof AnjoTextField) {
+            super.anjoComponent(component);
+            return this;
+        }
+        throw new IllegalArgumentException("Component must be an instance of AnjoTextField");
     }
 
-    public Runnable getRunnable() {
-        return runnable;
-    }
-
-    public void setRunnable(Runnable runnable) {
-        this.runnable = runnable;
-    }
-
-    public AnjoTextValidateListener runnable(Runnable runnable) {
-        setRunnable(runnable);
+    @Override
+    public AnjoTextValidateListener consumer(Consumer<AnjoComponent> consumer) {
+        super.consumer(consumer);
         return this;
     }
 
@@ -56,6 +66,15 @@ public class AnjoTextValidateListener implements KeyListener {
         return this;
     }
 
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
+    public AnjoTextValidateListener valid(boolean valid) {
+        setValid(valid);
+        return this;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
         if (e.getID() != KeyEvent.KEY_TYPED)
@@ -64,56 +83,42 @@ public class AnjoTextValidateListener implements KeyListener {
     }
 
     public void run() {
+        boolean validResult = true;
         switch (type) {
             case BYTE -> {
-                ByteResult result = getComponent().getByte();
-                if (result.isValid()) {
-                    return;
-                }
-                runnable.run();
+                ByteResult result = getAnjoComponent().getByte();
+                validResult = result.isValid();
             }
             case SHORT -> {
-                ShortResult result = component.getShort();
-                if (result.isValid()) {
-                    return;
-                }
-                runnable.run();
+                ShortResult result = getAnjoComponent().getShort();
+                validResult = result.isValid();
             }
             case INTEGER -> {
-                IntegerResult result = component.getInteger();
-                if (result.isValid()) {
-                    return;
-                }
-                runnable.run();
+                IntegerResult result = getAnjoComponent().getInteger();
+                validResult = result.isValid();
             }
             case LONG -> {
-                LongResult result = component.getLong();
-                if (result.isValid()) {
-                    return;
-                }
-                runnable.run();
+                LongResult result = getAnjoComponent().getLong();
+                validResult = result.isValid();
             }
             case FLOAT -> {
-                FloatResult result = component.getFloat();
-                if (result.isValid()) {
-                    return;
-                }
-                runnable.run();
+                FloatResult result = getAnjoComponent().getFloat();
+                validResult = result.isValid();
             }
             case DOUBLE -> {
-                DoubleResult result = component.getDouble();
-                if (result.isValid()) {
-                    return;
-                }
-                runnable.run();
+                DoubleResult result = getAnjoComponent().getDouble();
+                validResult = result.isValid();
             }
             case CHARACTER -> {
-                CharacterResult result = component.getCharacter();
-                if (result.isValid()) {
-                    return;
-                }
-                runnable.run();
+                CharacterResult result = getAnjoComponent().getCharacter();
+                validResult = result.isValid();
             }
+        }
+        if (validResult && valid) {
+            getConsumer().accept(getAnjoComponent());
+        }
+        if (!validResult && !valid) {
+            getConsumer().accept(getAnjoComponent());
         }
     }
 

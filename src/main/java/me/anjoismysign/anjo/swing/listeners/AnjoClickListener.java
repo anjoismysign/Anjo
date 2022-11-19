@@ -2,38 +2,25 @@ package me.anjoismysign.anjo.swing.listeners;
 
 import me.anjoismysign.anjo.swing.AnjoComponent;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.function.Consumer;
 
-public class AnjoClickListener implements MouseListener {
-    private AnjoComponent component;
-    private Runnable runnable;
+public class AnjoClickListener extends AnjoConsumerListener implements MouseListener {
 
-    public static AnjoClickListener build(AnjoComponent component, Runnable runnable) {
-        return new AnjoClickListener().component(component).runnable(runnable);
+    public static AnjoClickListener build(AnjoComponent component, Consumer<AnjoComponent> consumer) {
+        return new AnjoClickListener().anjoComponent(component).consumer(consumer);
     }
 
-    public JComponent getComponent() {
-        return component.getComponent();
-    }
-
-    public void setComponent(AnjoComponent component) {
-        this.component = component;
-    }
-
-    public AnjoClickListener component(AnjoComponent component) {
-        setComponent(component);
+    public AnjoClickListener anjoComponent(AnjoComponent component) {
+        super.anjoComponent(component);
         return this;
     }
 
-    public void setRunnable(Runnable runnable) {
-        this.runnable = runnable;
-    }
-
-    public AnjoClickListener runnable(Runnable runnable) {
-        setRunnable(runnable);
+    @Override
+    public AnjoClickListener consumer(Consumer<AnjoComponent> consumer) {
+        super.consumer(consumer);
         return this;
     }
 
@@ -43,7 +30,7 @@ public class AnjoClickListener implements MouseListener {
         if (component.equals(getComponent())) {
             return;
         }
-        runnable.run();
+        getConsumer().accept(getAnjoComponent());
     }
 
     @Override

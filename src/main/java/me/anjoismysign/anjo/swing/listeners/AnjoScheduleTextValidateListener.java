@@ -1,9 +1,12 @@
 package me.anjoismysign.anjo.swing.listeners;
 
+import me.anjoismysign.anjo.swing.AnjoComponent;
 import me.anjoismysign.anjo.swing.components.AnjoTextField;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.function.Consumer;
 
 public class AnjoScheduleTextValidateListener extends AnjoTextValidateListener implements KeyListener {
     private long transcurred;
@@ -12,15 +15,32 @@ public class AnjoScheduleTextValidateListener extends AnjoTextValidateListener i
     /**
      * @param component      The component to validate
      * @param type           The type of input
-     * @param runnable       The runnable to run when the input is not valid
+     * @param consumer       The consumer to accept when the input is not valid
      * @param maxTranscurred max time in milliseconds
      * @return The listener
      */
     public static AnjoScheduleTextValidateListener build(AnjoTextField component, TextInputType type,
-                                                         Runnable runnable, long maxTranscurred) {
-        return new AnjoScheduleTextValidateListener().component(component)
-                .runnable(runnable).type(type).maxTranscurred(maxTranscurred)
-                .transcurred(System.currentTimeMillis());
+                                                         Consumer<AnjoComponent> consumer,
+                                                         long maxTranscurred, boolean valid) {
+        return new AnjoScheduleTextValidateListener().anjoComponent(component)
+                .type(type).maxTranscurred(maxTranscurred)
+                .transcurred(System.currentTimeMillis())
+                .valid(valid).consumer(consumer);
+    }
+
+    public static AnjoTextValidateListener colorText(AnjoTextField component, TextInputType type,
+                                                     Color color, long maxTranscurred,
+                                                     boolean valid) {
+        return build(component, type, c -> {
+            AnjoTextField textField = (AnjoTextField) c;
+            textField.getComponent().setForeground(color);
+        }, maxTranscurred, valid);
+    }
+
+    @Override
+    public AnjoScheduleTextValidateListener valid(boolean valid) {
+        super.valid(valid);
+        return this;
     }
 
     public long getTranscurred() {
@@ -46,14 +66,14 @@ public class AnjoScheduleTextValidateListener extends AnjoTextValidateListener i
     }
 
     @Override
-    public AnjoScheduleTextValidateListener component(AnjoTextField component) {
-        super.component(component);
+    public AnjoScheduleTextValidateListener anjoComponent(AnjoComponent component) {
+        super.anjoComponent(component);
         return this;
     }
 
     @Override
-    public AnjoScheduleTextValidateListener runnable(Runnable runnable) {
-        super.runnable(runnable);
+    public AnjoScheduleTextValidateListener consumer(Consumer<AnjoComponent> consumer) {
+        super.consumer(consumer);
         return this;
     }
 

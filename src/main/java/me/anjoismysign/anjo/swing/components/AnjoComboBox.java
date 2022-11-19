@@ -9,9 +9,10 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 public class AnjoComboBox extends AnjoComponent {
-    private JComboBox<String> comboBox;
+    private final JComboBox<String> comboBox;
 
     public static AnjoComboBox build(String label, Collection<String> options) {
         return build(label, options.toArray(new String[0]));
@@ -92,21 +93,21 @@ public class AnjoComboBox extends AnjoComponent {
     /**
      * Will add an AnjoClickListener to the component
      *
-     * @param runnable the runnable to be run when the component is clicked
+     * @param consumer the consomuer to accept when the component is clicked
      */
-    public AnjoComboBox addAnjoClickListener(Runnable runnable) {
-        addMouseListener(AnjoClickListener.build(this, runnable));
+    public AnjoComboBox addAnjoClickListener(Consumer<AnjoComponent> consumer) {
+        addMouseListener(AnjoClickListener.build(this, consumer));
         return this;
     }
 
     /**
      * Will add an AnjoKeynputListener to the component
      *
-     * @param runnable the runnable to be run when receiving a key input from the component
+     * @param consumer the consumer to accept when receiving a key input from the component
      * @param inputs   the inputs to listen for
      */
-    public AnjoComboBox addAnjoKeynputListener(Runnable runnable, char[] inputs) {
-        addKeyListener(AnjoKeynputListener.build(this, runnable, inputs));
+    public AnjoComboBox addAnjoKeynputListener(Consumer<AnjoComponent> consumer, char[] inputs) {
+        addKeyListener(AnjoKeynputListener.build(this, consumer, inputs));
         return this;
     }
 

@@ -77,7 +77,6 @@ public class AnjoTextValidateListener extends AnjoConsumerListener implements Ke
 
     @Override
     public void keyTyped(KeyEvent e) {
-        System.out.println("keyTyped");
         boolean validResult = true;
         switch (type) {
             case BYTE -> {
@@ -109,10 +108,10 @@ public class AnjoTextValidateListener extends AnjoConsumerListener implements Ke
                 validResult = result.isValid();
             }
         }
-        if (validResult && valid) {
+        if (validResult == true && valid == true) {
             getConsumer().accept(getAnjoComponent());
         }
-        if (!validResult && !valid) {
+        if (validResult == false && valid == false) {
             getConsumer().accept(getAnjoComponent());
         }
     }

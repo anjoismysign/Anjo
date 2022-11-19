@@ -108,10 +108,7 @@ public class AnjoTextValidateListener extends AnjoConsumerListener implements Ke
                 validResult = result.isValid();
             }
         }
-        if (validResult == true && valid == true) {
-            getConsumer().accept(getAnjoComponent());
-        }
-        if (validResult == false && valid == false) {
+        if (validResult == true && valid == true || validResult == false && valid == false) {
             getConsumer().accept(getAnjoComponent());
         }
     }

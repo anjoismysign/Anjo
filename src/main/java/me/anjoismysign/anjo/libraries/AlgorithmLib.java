@@ -30,4 +30,12 @@ public class AlgorithmLib {
     public static void dynamicRun(Runnable runnable, String message) {
         dynamicRun(runnable, "", message);
     }
+
+    public static void ThreadSleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

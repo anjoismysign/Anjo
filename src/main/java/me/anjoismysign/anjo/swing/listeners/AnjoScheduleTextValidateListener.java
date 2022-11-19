@@ -85,10 +85,6 @@ public class AnjoScheduleTextValidateListener extends AnjoTextValidateListener i
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (this.transcurred - System.currentTimeMillis() > this.maxTranscurred) {
-            this.transcurred = System.currentTimeMillis();
-            super.keyTyped(e);
-        }
     }
 
     @Override
@@ -98,6 +94,9 @@ public class AnjoScheduleTextValidateListener extends AnjoTextValidateListener i
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        if (this.transcurred - System.currentTimeMillis() > this.maxTranscurred) {
+            this.transcurred = System.currentTimeMillis();
+            super.keyReleased(e);
+        }
     }
 }

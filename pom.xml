@@ -6,7 +6,7 @@
 
     <groupId>me.anjoismysign.anjo</groupId>
     <artifactId>Anjo</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 
     <scm>
         <connection>scm:git:git@github.com:anjoismysign/Anjo.git</connection>

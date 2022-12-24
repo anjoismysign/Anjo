@@ -31,10 +31,12 @@ public class Sample {
         AnjoComponent component1 = new AnjoComponent("Minecraft username", new JTextField());
         AnjoComponent component2 = new AnjoComponent("Discord username:", new JTextField());
         AnjoComponent component3 = new AnjoComponent("Age:", new JTextField());
-        List<AnjoComponent> componentes = new ArrayList<>();
-        componentes.add(component1);
-        componentes.add(component2);
-        AnjoPane anjoPane = AnjoPane.build(componentes, "Anjo's SMP Form", 2, null);
+        List<AnjoComponent> components = new ArrayList<>();
+        components.add(component1);
+        components.add(component2);
+        components.add(component3);
+        AnjoPane anjoPane = AnjoPane.build(components, "Anjo's SMP Form", 2,
+                null);
         String minecraftUsername = anjoPane.getTextFieldText(0);
         String discordUsername = anjoPane.getTextFieldText(1);
         ShortResult result = anjoPane.getShort(2);

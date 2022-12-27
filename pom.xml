@@ -6,7 +6,7 @@
 
     <groupId>me.anjoismysign.anjo</groupId>
     <artifactId>Anjo</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
 
     <scm>
         <connection>scm:git:git@github.com:anjoismysign/Anjo.git</connection>
@@ -63,4 +63,11 @@
         <finalName>${project.artifactId}-${project.version}.${buildNumber}</finalName>
     </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+    </dependencies>
 </project>

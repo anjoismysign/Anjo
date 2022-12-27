@@ -1,6 +1,6 @@
 package me.anjoismysign.anjo.swing;
 
-import me.anjoismysign.anjo.entities.*;
+import me.anjoismysign.anjo.entities.Result;
 
 import javax.swing.*;
 import java.awt.*;
@@ -169,22 +169,22 @@ public class AnjoPane {
      * A useful method to validate!
      *
      * @param index The index of the row
-     * @return The result. Always check with ByteResult#isValid
+     * @return The result. Always check with Result<Byte>#isValid
      * due that if it being "false" meaning it's not a byte.
      * An example of not being a byte is if NumberFormatException
      * is catched.
-     * @see ByteResult
+     * @see Result<Byte>
      */
-    public ByteResult getByte(int index) {
+    public Result<Byte> getByte(int index) {
         JTextField textField = getJTextField(index);
         if (textField == null)
-            return new ByteResult((byte) 0, false);
+            return new Result<>(null, false);
         byte value;
         try {
             value = Byte.parseByte(textField.getText());
-            return new ByteResult(value, true);
+            return new Result<>(value, true);
         } catch (NumberFormatException e) {
-            return new ByteResult((byte) 0, false);
+            return new Result<>(null, false);
         }
     }
 
@@ -193,22 +193,22 @@ public class AnjoPane {
      * A useful method to validate!
      *
      * @param index The index of the row
-     * @return The result. Always check with ShortResult#isValid
+     * @return The result. Always check with Result<Short>#isValid
      * due that if it being "false" meaning it's not a short.
      * An example of not being a short is if NumberFormatException
      * is catched.
-     * @see ShortResult
+     * @see Result<Short>
      */
-    public ShortResult getShort(int index) {
+    public Result<Short> getShort(int index) {
         JTextField textField = getJTextField(index);
         if (textField == null)
-            return new ShortResult((short) 0, false);
+            return new Result<>(null, false);
         short value;
         try {
             value = Short.parseShort(textField.getText());
-            return new ShortResult(value, true);
+            return new Result<>(value, true);
         } catch (NumberFormatException e) {
-            return new ShortResult((short) 0, false);
+            return new Result<>(null, false);
         }
     }
 
@@ -217,22 +217,22 @@ public class AnjoPane {
      * A useful method to validate!
      *
      * @param index The index of the row
-     * @return The result. Always check with IntegerResult#isValid
+     * @return The result. Always check with Result<Integer>#isValid
      * due that if it being "false" meaning it's not an integer.
      * An example of not being an integer is if NumberFormatException
      * is catched.
-     * @see IntegerResult
+     * @see Result<Integer>
      */
-    public IntegerResult getInteger(int index) {
+    public Result<Integer> getInteger(int index) {
         JTextField textField = getJTextField(index);
         if (textField == null)
-            return new IntegerResult(0, false);
+            return new Result<>(null, false);
         int value;
         try {
             value = Integer.parseInt(textField.getText());
-            return new IntegerResult(value, true);
+            return new Result<>(value, true);
         } catch (NumberFormatException e) {
-            return new IntegerResult(0, false);
+            return new Result<>(null, false);
         }
     }
 
@@ -241,22 +241,22 @@ public class AnjoPane {
      * A useful method to validate!
      *
      * @param index The index of the row
-     * @return The result. Always check with LongResult#isValid
+     * @return The result. Always check with Result<Long>#isValid
      * due that if it being "false" meaning it's not a long.
      * An example of not being a long is if NumberFormatException
      * is catched.
-     * @see LongResult
+     * @see Result<Long>
      */
-    public LongResult getLong(int index) {
+    public Result<Long> getLong(int index) {
         JTextField textField = getJTextField(index);
         if (textField == null)
-            return new LongResult(0, false);
+            return new Result<>(null, false);
         long value;
         try {
             value = Long.parseLong(textField.getText());
-            return new LongResult(value, true);
+            return new Result<>(value, true);
         } catch (NumberFormatException e) {
-            return new LongResult(0, false);
+            return new Result<>(null, false);
         }
     }
 
@@ -265,22 +265,22 @@ public class AnjoPane {
      * A useful method to validate!
      *
      * @param index The index of the row
-     * @return The result. Always check with FloatResult#isValid
+     * @return The result. Always check with Result<Float>#isValid
      * due that if it being "false" meaning it's not a float.
      * An example of not being a float is if NumberFormatException
      * is catched.
-     * @see FloatResult
+     * @see Result<Float>
      */
-    public FloatResult getFloat(int index) {
+    public Result<Float> getFloat(int index) {
         JTextField textField = getJTextField(index);
         if (textField == null)
-            return new FloatResult(0, false);
+            return new Result<>(null, false);
         float value;
         try {
             value = Float.parseFloat(textField.getText());
-            return new FloatResult(value, true);
+            return new Result<>(value, true);
         } catch (NumberFormatException e) {
-            return new FloatResult(0, false);
+            return new Result<>(null, false);
         }
     }
 
@@ -289,22 +289,22 @@ public class AnjoPane {
      * A useful method to validate!
      *
      * @param index The index of the row
-     * @return The result. Always check with DoubleResult#isValid
+     * @return The result. Always check with Result<Double>#isValid
      * due that if it being "false" meaning it's not a double.
      * An example of not being a double is if NumberFormatException
      * is catched.
-     * @see DoubleResult
+     * @see Result<Double>
      */
-    public DoubleResult getDouble(int index) {
+    public Result<Double> getDouble(int index) {
         JTextField textField = getJTextField(index);
         if (textField == null)
-            return new DoubleResult(0, false);
+            return new Result<>(null, false);
         double value;
         try {
             value = Double.parseDouble(textField.getText());
-            return new DoubleResult(value, true);
+            return new Result<>(value, true);
         } catch (NumberFormatException e) {
-            return new DoubleResult(0, false);
+            return new Result<>(null, false);
         }
     }
 
@@ -313,19 +313,19 @@ public class AnjoPane {
      * A useful method to validate!
      *
      * @param index The index of the row
-     * @return The result. Always check with CharacterResult#isValid
+     * @return The result. Always check with Result<Character>#isValid
      * due that if it being "false" meaning it's not a char.
      * An example of not being a char is if the text is more than a single character.
-     * @see CharacterResult
+     * @see Result<Character>
      */
-    public CharacterResult getCharacter(int index) {
+    public Result<Character> getCharacter(int index) {
         JTextField textField = getJTextField(index);
         if (textField == null)
-            return new CharacterResult('0', false);
+            return new Result<>(null, false);
         String text = textField.getText();
         if (text.length() == 1)
-            return new CharacterResult(text.charAt(0), true);
-        return new CharacterResult('0', false);
+            return new Result<>(text.charAt(0), true);
+        return new Result<>(null, false);
     }
 
     /**

@@ -1,6 +1,6 @@
 package me.anjoismysign.anjo.swing.listeners;
 
-import me.anjoismysign.anjo.entities.*;
+import me.anjoismysign.anjo.entities.Result;
 import me.anjoismysign.anjo.swing.AnjoComponent;
 import me.anjoismysign.anjo.swing.components.AnjoTextField;
 
@@ -89,31 +89,31 @@ public class AnjoTextValidateListener extends AnjoConsumerListener implements Ke
         boolean validResult = true;
         switch (type) {
             case BYTE -> {
-                ByteResult result = getAnjoComponent().getByte();
+                Result<Byte> result = getAnjoComponent().getByte();
                 validResult = result.isValid();
             }
             case SHORT -> {
-                ShortResult result = getAnjoComponent().getShort();
+                Result<Short> result = getAnjoComponent().getShort();
                 validResult = result.isValid();
             }
             case INTEGER -> {
-                IntegerResult result = getAnjoComponent().getInteger();
+                Result<Integer> result = getAnjoComponent().getInteger();
                 validResult = result.isValid();
             }
             case LONG -> {
-                LongResult result = getAnjoComponent().getLong();
+                Result<Long> result = getAnjoComponent().getLong();
                 validResult = result.isValid();
             }
             case FLOAT -> {
-                FloatResult result = getAnjoComponent().getFloat();
+                Result<Float> result = getAnjoComponent().getFloat();
                 validResult = result.isValid();
             }
             case DOUBLE -> {
-                DoubleResult result = getAnjoComponent().getDouble();
+                Result<Double> result = getAnjoComponent().getDouble();
                 validResult = result.isValid();
             }
             case CHARACTER -> {
-                CharacterResult result = getAnjoComponent().getCharacter();
+                Result<Character> result = getAnjoComponent().getCharacter();
                 validResult = result.isValid();
             }
         }

@@ -1,4 +1,4 @@
-package me.anjoismysign.anjo.entities.uber;
+package me.anjoismysign.anjo.entities;
 
 public class Uber<T> {
     private T value;

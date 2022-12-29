@@ -5,6 +5,7 @@ import me.anjoismysign.anjo.entities.UpdatableSerializableHandler;
 import me.anjoismysign.anjo.logger.Logger;
 import me.anjoismysign.anjo.sql.SQLHolder;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +20,30 @@ public class MySQLManager<T extends Crudable> implements SQLCrudManager<T> {
     private final int primaryKeyLength, port;
     private final Supplier<T> createSupplier;
     private final Optional<Logger> logger;
+
+    protected MySQLManager(String hostName, int port, String database, String user, String password, String tableName,
+                           String primaryKeyName, int primaryKeyLength, String crudableKeyTypeName,
+                           Class<T> clazz, Logger logger) {
+        this.tableName = tableName;
+        this.primaryKeyName = primaryKeyName;
+        this.primaryKeyLength = primaryKeyLength;
+        this.crudableKeyTypeName = crudableKeyTypeName;
+        this.createSupplier = () -> {
+            try {
+                return clazz.getDeclaredConstructor().newInstance();
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            throw new RuntimeException("Failed to create instance of " + clazz.getName());
+        };
+        this.hostname = hostName;
+        this.port = port;
+        this.database = database;
+        this.user = user;
+        this.password = password;
+        this.logger = Optional.ofNullable(logger);
+        load();
+    }
 
     protected MySQLManager(String hostName, int port, String database, String user, String password, String tableName,
                            String primaryKeyName, int primaryKeyLength, String crudableKeyTypeName,

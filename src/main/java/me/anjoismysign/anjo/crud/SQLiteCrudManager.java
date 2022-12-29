@@ -6,6 +6,7 @@ import me.anjoismysign.anjo.logger.Logger;
 import me.anjoismysign.anjo.sql.SQLHolder;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,6 +31,27 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
         this.primaryKeyLength = primaryKeyLength;
         this.crudableKeyTypeName = crudableKeyTypeName;
         this.createSupplier = createSupplier;
+        this.database = database;
+        this.path = path;
+        this.logger = Optional.ofNullable(logger);
+        load();
+    }
+
+    protected SQLiteCrudManager(String database, File path, String tableName, String primaryKeyName,
+                                int primaryKeyLength, String crudableKeyTypeName, Class<T> clazz,
+                                Logger logger) {
+        this.tableName = tableName;
+        this.primaryKeyName = primaryKeyName;
+        this.primaryKeyLength = primaryKeyLength;
+        this.crudableKeyTypeName = crudableKeyTypeName;
+        this.createSupplier = () -> {
+            try {
+                return clazz.getDeclaredConstructor().newInstance();
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+            throw new RuntimeException("Failed to create instance of " + clazz.getName());
+        };
         this.database = database;
         this.path = path;
         this.logger = Optional.ofNullable(logger);

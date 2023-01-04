@@ -1,13 +1,13 @@
 package me.anjoismysign.anjo.entities;
 
-public class ConventionNamer {
+public class ConventionHelper {
     private final String value;
 
-    public static ConventionNamer from(String value) {
-        return new ConventionNamer(value);
+    public static ConventionHelper from(String value) {
+        return new ConventionHelper(value);
     }
 
-    private ConventionNamer(String value) {
+    private ConventionHelper(String value) {
         this.value = value;
     }
 

@@ -12,7 +12,7 @@ Maven -> {
   <dependency>
     <groupId>com.github.anjoismysign</groupId>
     <artifactId>Anjo</artifactId>
-    <version>v0.2.3</version>
+    <version>v0.3.6</version>
   </dependency>
   ```
 }

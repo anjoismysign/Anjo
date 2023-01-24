@@ -8,4 +8,8 @@ public record Result<T>(T value, boolean isValid) {
     public static <T> Result<T> invalid(T value) {
         return new Result<>(value, false);
     }
+
+    public static <T> Result<T> invalidBecauseNull() {
+        return new Result<>(null, false);
+    }
 }

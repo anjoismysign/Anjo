@@ -2,8 +2,20 @@ package me.anjoismysign.anjo.entities;
 
 import java.io.*;
 
+/**
+ * A serializable handler
+ *
+ * @param value The value
+ * @param <T>   The type
+ */
 public record SerializableHandler<T extends Serializable>(T value) {
 
+    /**
+     * Deserialize a byte array
+     *
+     * @param bytes The byte array
+     * @return The SerializableHandler
+     */
     public static SerializableHandler<Serializable> deserialize(byte[] bytes) {
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         ObjectInput in;
@@ -20,6 +32,11 @@ public record SerializableHandler<T extends Serializable>(T value) {
         return null;
     }
 
+    /**
+     * Serializes the value to a byte array
+     *
+     * @return The byte array
+     */
     public byte[] serialize() {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutput out;

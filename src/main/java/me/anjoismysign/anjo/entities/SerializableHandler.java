@@ -5,8 +5,8 @@ import java.io.*;
 /**
  * A serializable handler
  *
- * @param value The value
- * @param <T>   The type
+ * @param value The value/object which extends Serializable
+ * @param <T>   The type of the value/object
  */
 public record SerializableHandler<T extends Serializable>(T value) {
 

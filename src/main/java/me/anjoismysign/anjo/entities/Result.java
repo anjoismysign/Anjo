@@ -2,6 +2,14 @@ package me.anjoismysign.anjo.entities;
 
 import java.util.Optional;
 
+/**
+ * A class that represents a result of a process.
+ * We recommend using static method 'ofNullable' instead of the default constructor.
+ *
+ * @param value   the value
+ * @param isValid if the result is valid
+ * @param <T>     the type of the value
+ */
 public record Result<T>(T value, boolean isValid) {
 
     /**
@@ -32,6 +40,8 @@ public record Result<T>(T value, boolean isValid) {
     }
 
     /**
+     * Should be the default constructor for a Result object.
+     *
      * @param <T> the type of the value
      * @return an invalid result, since the value is null it's not required to pass it.
      */

@@ -16,6 +16,7 @@ public class Uber<T> {
      * Creates a new Uber object with the given value.
      * An example of how to use it:
      * <p>
+     * //check how 'uber' is used in the lambda expression without being final
      * Uber&lt;Integer&gt; uber = Uber.drive(0);
      * () -> {
      * uber.talk(uber.thanks() + 3);
@@ -36,6 +37,7 @@ public class Uber<T> {
      * Creates a new Uber object with a null value.
      * An example of how to use it:
      * <p>
+     * //check how 'uber' is used in the lambda expression without being final
      * Uber&lt;String&gt; uber = Uber.fly();
      * () -> {
      * uber.talk("Hello World!");

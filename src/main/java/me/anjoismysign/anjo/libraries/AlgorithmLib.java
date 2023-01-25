@@ -24,7 +24,7 @@ public class AlgorithmLib {
     /**
      * Runs code until the user wants to stop.
      *
-     * @param runnable what you wanna run while user prefers to continue
+     * @param runnable what you want to run while user prefers to continue
      * @param message  JOptionPane message/body
      */
     public static void dynamicRun(Runnable runnable, String message) {

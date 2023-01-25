@@ -7,7 +7,13 @@ import javax.swing.*;
  */
 public class PanelLib {
     /**
-     * Translates UI buttons to Spanish
+     * Translates UI buttons to Spanish.
+     * Should be run inside main method before running code that makes use of Java Swing, here an example:
+     * <p>
+     * public static void main(String[] args) {
+     * PanelLib.esEs();
+     * // code that makes use of Java Swing
+     * }
      */
     public static void esEs() {
         UIManager.put("OptionPane.cancelButtonText", "Anular");

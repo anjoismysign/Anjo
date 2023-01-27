@@ -1,5 +1,5 @@
 # Anjo
-My work. MIT license.
+My work. Apache 2.0 license.
 
 Maven -> {
   ```

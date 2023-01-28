@@ -9,9 +9,9 @@ public interface Logger {
     }
 
     default void error(String message) {
-        log("ERROR: " + message + "\n" +
-                "ERROR: " + message + "\n" +
-                "ERROR: " + message);
+        singleError(message);
+        singleError(message);
+        singleError(message);
     }
 
     default void singleError(String message) {

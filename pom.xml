@@ -69,5 +69,10 @@
             <artifactId>HikariCP</artifactId>
             <version>5.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.0</version>
+        </dependency>
     </dependencies>
 </project>

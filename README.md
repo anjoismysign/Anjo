@@ -1,7 +1,7 @@
 # Anjo
 My work. Apache 2.0 license.
 
-* Flexibility and scalability in SQL databases by implementing UpdatableSerialazable.
+* Flexibility and scalability in SQL databases by implementing UpdatableSerializable.
 * Automate your IDE, workspace or standarize a naming convention within files in your community with NamingConventions.
 * Go anarch mode and use Result<T> instead of Optional<T>. Explain your fellows it's for selfexplanatorism!
 * Let 'Variable should be final or effectively final' bury. Fetch an Uber<T>, talk(T t) in order to update the address and remember to tip!

@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -19,7 +18,7 @@ public class MySQLManager<T extends Crudable> implements SQLCrudManager<T> {
     private final String hostname, database, user, password, tableName, primaryKeyName, crudableKeyTypeName;
     private final int primaryKeyLength, port;
     private final Supplier<T> createSupplier;
-    private final Optional<Logger> logger;
+    private final Logger logger;
 
     protected MySQLManager(String hostName, int port, String database, String user, String password, String tableName,
                            String primaryKeyName, int primaryKeyLength, String crudableKeyTypeName,
@@ -41,7 +40,7 @@ public class MySQLManager<T extends Crudable> implements SQLCrudManager<T> {
         this.database = database;
         this.user = user;
         this.password = password;
-        this.logger = Optional.ofNullable(logger);
+        this.logger = logger;
         load();
     }
 
@@ -58,18 +57,19 @@ public class MySQLManager<T extends Crudable> implements SQLCrudManager<T> {
         this.database = database;
         this.user = user;
         this.password = password;
-        this.logger = Optional.ofNullable(logger);
+        this.logger = logger;
         load();
     }
 
     public void load() {
-        holder = new SQLHolder(hostname, port, database, user, password);
+        holder = new SQLHolder(hostname, port, database, user, password, logger);
         holder.getDatabase().createTable(getTableName(), getPrimaryKeyName() +
                 " VARCHAR(" + getPrimaryKeyLength() + ")," + getCrudableKeyTypeName() +
                 " BLOB", getPrimaryKeyName());
     }
 
     public void reload() {
+        logger.log("Reloading database...");
         holder.disconnect();
         load();
     }
@@ -258,6 +258,11 @@ public class MySQLManager<T extends Crudable> implements SQLCrudManager<T> {
         }
     }
 
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
+
     /**
      * @param biConsumer First parameter is AnjoCrudable, second parameter is the version
      */
@@ -272,10 +277,5 @@ public class MySQLManager<T extends Crudable> implements SQLCrudManager<T> {
                 e.printStackTrace();
             }
         });
-    }
-
-    @Override
-    public Optional<Logger> getLogger() {
-        return logger;
     }
 }

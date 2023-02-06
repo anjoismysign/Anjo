@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -21,7 +20,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     private final int primaryKeyLength;
     private final File path;
     private final Supplier<T> createSupplier;
-    private final Optional<Logger> logger;
+    private final Logger logger;
 
     protected SQLiteCrudManager(String database, File path, String tableName, String primaryKeyName,
                                 int primaryKeyLength, String crudableKeyTypeName, Supplier<T> createSupplier,
@@ -33,7 +32,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
         this.createSupplier = createSupplier;
         this.database = database;
         this.path = path;
-        this.logger = Optional.ofNullable(logger);
+        this.logger = logger;
         load();
     }
 
@@ -54,20 +53,19 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
         };
         this.database = database;
         this.path = path;
-        this.logger = Optional.ofNullable(logger);
+        this.logger = logger;
         load();
     }
 
     public void load() {
-        holder = new SQLHolder(database, path);
+        holder = new SQLHolder(database, path, logger);
         holder.getDatabase().createTable(getTableName(), getPrimaryKeyName() +
                 " VARCHAR(" + getPrimaryKeyLength() + ")," + getCrudableKeyTypeName() +
                 " BLOB", getPrimaryKeyName());
     }
 
     public void reload() {
-        if (logger.isPresent())
-            logger.get().log("Reloading database...");
+        logger.log("Reloading database...");
         holder.disconnect();
         load();
     }
@@ -273,7 +271,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     }
 
     @Override
-    public Optional<Logger> getLogger() {
+    public Logger getLogger() {
         return logger;
     }
 }

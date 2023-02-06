@@ -1,7 +1,7 @@
 package me.anjoismysign.anjo.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
-import me.anjoismysign.anjo.logger.PrintLogger;
+import me.anjoismysign.anjo.logger.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Consumer;
 
-public abstract class SQLDatabase extends PrintLogger {
+public abstract class SQLDatabase {
+    protected final Logger logger;
     protected final String database;
     protected final String hostName;
     protected final int port;
@@ -29,7 +30,9 @@ public abstract class SQLDatabase extends PrintLogger {
      * @param user     The user of the database
      * @param password The password of the database
      */
-    protected SQLDatabase(String hostName, int port, String database, String user, String password) {
+    protected SQLDatabase(String hostName, int port, String database, String user,
+                          String password, Logger logger) {
+        this.logger = logger;
         this.dataSource = new HikariDataSource();
         this.executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
         this.database = database;
@@ -224,5 +227,21 @@ public abstract class SQLDatabase extends PrintLogger {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void log(String message) {
+        logger.log(message);
+    }
+
+    public void debug(String message) {
+        logger.debug(message);
+    }
+
+    public void error(String message) {
+        logger.error(message);
+    }
+
+    public void singleError(String message) {
+        logger.singleError(message);
     }
 }

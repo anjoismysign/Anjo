@@ -1,11 +1,13 @@
 package me.anjoismysign.anjo.sql;
 
+import me.anjoismysign.anjo.logger.Logger;
+
 import java.io.File;
 import java.sql.Connection;
 
 public final class SQLite extends SQLDatabase {
-    protected SQLite(String name, File path) {
-        super(null, 0, name, null, null);
+    protected SQLite(String name, File path, Logger logger) {
+        super(null, 0, name, null, null, logger);
         File file = new File(path, database.endsWith(".db") ? database : database + ".db");
         try {
             if (!file.exists()) file.createNewFile();

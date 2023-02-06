@@ -1,11 +1,14 @@
 package me.anjoismysign.anjo.sql;
 
+import me.anjoismysign.anjo.logger.Logger;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public final class MySQL extends SQLDatabase {
-    protected MySQL(String hostName, int port, String database, String user, String password) {
-        super(hostName, port, database, user, password);
+    protected MySQL(String hostName, int port, String database, String user,
+                    String password, Logger logger) {
+        super(hostName, port, database, user, password, logger);
         dataSource.setJdbcUrl("jdbc:mysql://" + this.hostName + ':' + this.port + '/' + this.database);
     }
 

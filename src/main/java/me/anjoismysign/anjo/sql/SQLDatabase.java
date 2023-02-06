@@ -229,19 +229,7 @@ public abstract class SQLDatabase {
         }
     }
 
-    public void log(String message) {
-        logger.log(message);
-    }
-
-    public void debug(String message) {
-        logger.debug(message);
-    }
-
-    public void error(String message) {
-        logger.error(message);
-    }
-
-    public void singleError(String message) {
-        logger.singleError(message);
+    public Logger getLogger() {
+        return logger;
     }
 }

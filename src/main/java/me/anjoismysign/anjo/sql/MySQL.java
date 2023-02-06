@@ -23,7 +23,7 @@ public final class MySQL extends SQLDatabase {
             connection = dataSource.getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
-            singleError("Failed to connect to 'MySQL' Database using following credentials: \n" +
+            getLogger().singleError("Failed to connect to 'MySQL' Database using following credentials: \n" +
                     "Hostname: " + hostName + "\n" +
                     "Port: " + port + "\n" +
                     "Database: " + database + "\n" +

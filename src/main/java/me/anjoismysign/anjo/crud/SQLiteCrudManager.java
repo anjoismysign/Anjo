@@ -38,9 +38,12 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
 
     public void load() {
         holder = new SQLHolder(database, path, logger);
-        holder.getDatabase().createTable(getTableName(), getPrimaryKeyName() +
+        if (holder.getDatabase().createTable(getTableName(), getPrimaryKeyName() +
                 " VARCHAR(" + getPrimaryKeyLength() + ")," + getCrudableKeyTypeName() +
-                " BLOB", getPrimaryKeyName());
+                " BLOB", getPrimaryKeyName()))
+            logger.log("Create table " + getTableName() + " with primary key " + getPrimaryKeyName() +
+                    " and type " + getCrudableKeyTypeName() + " " +
+                    "was executed successfully.");
     }
 
     public void reload() {
@@ -78,8 +81,13 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
      * @return Whether the record exists
      */
     public boolean exists(String id) {
-        return this.holder.getDatabase().exists(getTableName(),
+        boolean exists = this.holder.getDatabase().exists(getTableName(),
                 getPrimaryKeyName(), id);
+        if (exists)
+            log("Record with id " + id + " exists.");
+        else
+            log("Record with id " + id + " does not exist.");
+        return exists;
     }
 
     /**
@@ -101,6 +109,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
             if (!exists(identification)) {
                 preparedStatement.setString(1, identification);
                 preparedStatement.executeUpdate();
+                log("Created new record with id " + identification + ".");
             }
             if (preparedStatement != null) {
                 preparedStatement.close();
@@ -145,6 +154,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 resultSet.getStatement().getConnection().close();
                 @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
                 crudable = updatableSerializable.getValue();
+                log("Read record with id " + id + " successfully.");
                 return crudable;
             } else {
                 resultSet.close();
@@ -189,6 +199,8 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
             statement.setBytes(1, handler.serialize());
             statement.setString(2, id);
             statement.executeUpdate();
+            if (version != 0)
+                log("Updated record with id " + id + " to version " + version + ".");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -211,6 +223,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
         try {
             preparedStatement.setString(1, id);
             preparedStatement.executeUpdate();
+            log("Deleted record with id " + id + ".");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -232,6 +245,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 byte[] bytes = resultSet.getBytes(getCrudableKeyTypeName());
                 @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
                 T crudable = updatableSerializable.getValue();
+                log("Read record with id " + crudable.getIdentification() + " successfully.");
                 biConsumer.accept(crudable, updatableSerializable.getVersion());
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -242,5 +256,10 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     @Override
     public Logger getLogger() {
         return logger;
+    }
+
+    private void log(String message) {
+        if (logger != null)
+            logger.log(message);
     }
 }

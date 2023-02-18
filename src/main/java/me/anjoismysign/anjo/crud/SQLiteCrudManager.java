@@ -84,16 +84,15 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
 
     /**
      * Creates a new instance of the Crudable and registers it in the database
-     * using the given identification.
+     * using the given identification. Will only update the identification.
      *
      * @param identification The identification to use.
      * @return The new instance of the Crudable.
      */
     @Override
     public T createAndRegister(String identification) {
-        T Crudable = create(identification);
+        T crudable = create(identification);
         Connection connection = null;
-//        String sql = "INSERT IGNORE INTO " + TABLE_NAME(); //MySQL
         String sql = "INSERT OR IGNORE INTO " + getTableName();
         try {
             connection = this.holder.getDatabase().getConnection();
@@ -117,7 +116,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                     e.printStackTrace();
                 }
         }
-        return Crudable;
+        return crudable;
     }
 
     /**
@@ -137,7 +136,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     public T read(String id) {
         ResultSet resultSet = this.holder.getDatabase()
                 .selectRowByPrimaryKey(getPrimaryKeyName(), id, getTableName());
-        T Crudable;
+        T crudable;
         try {
             if (resultSet.next()) {
                 byte[] bytes = resultSet.getBytes(getCrudableKeyTypeName());
@@ -145,8 +144,8 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
                 @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
-                Crudable = updatableSerializable.getValue();
-                return Crudable;
+                crudable = updatableSerializable.getValue();
+                return crudable;
             } else {
                 resultSet.close();
                 resultSet.getStatement().close();
@@ -167,23 +166,23 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     }
 
     /**
-     * @param Crudable The Crudable to be updated (defaults version to 0)
+     * @param crudable The Crudable to be updated (defaults version to 0)
      */
     @Override
-    public void update(T Crudable) {
-        update(Crudable, 0);
+    public void update(T crudable) {
+        update(crudable, 0);
     }
 
     /**
      * Updates the database with the given Crudable and version
      *
-     * @param Crudable The Crudable to update
+     * @param crudable The Crudable to update
      * @param version  The version to update to
      */
     @Override
-    public void update(T Crudable, int version) {
-        UpdatableSerializableHandler<T> handler = newUpdatable(Crudable, 0);
-        String id = Crudable.getIdentification();
+    public void update(T crudable, int version) {
+        UpdatableSerializableHandler<T> handler = newUpdatable(crudable, 0);
+        String id = crudable.getIdentification();
         PreparedStatement statement = this.holder.getDatabase()
                 .updateDataSet(getPrimaryKeyName(), getTableName(), crudableKeyTypePrepareStatement());
         try {
@@ -232,8 +231,8 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
             try {
                 byte[] bytes = resultSet.getBytes(getCrudableKeyTypeName());
                 @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
-                T Crudable = updatableSerializable.getValue();
-                biConsumer.accept(Crudable, updatableSerializable.getVersion());
+                T crudable = updatableSerializable.getValue();
+                biConsumer.accept(crudable, updatableSerializable.getVersion());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

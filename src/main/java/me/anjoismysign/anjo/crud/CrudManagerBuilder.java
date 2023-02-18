@@ -6,20 +6,20 @@ import java.io.File;
 import java.util.function.Function;
 
 public class CrudManagerBuilder {
-    public static <T extends Crudable> MySQLManager<T> MYSQL(String hostname, int port, String database,
-                                                             String user, String password, String tableName,
-                                                             String primaryKeyName, int primaryKeyLength,
-                                                             String crudableKeyTypeName, Function<String, T> createFunction,
-                                                             Logger logger) {
-        return new MySQLManager<>(hostname, port, database, user, password, tableName, primaryKeyName,
+    public static <T extends Crudable> MySQLCrudManager<T> MYSQL(String hostname, int port, String database,
+                                                                 String user, String password, String tableName,
+                                                                 String primaryKeyName, int primaryKeyLength,
+                                                                 String crudableKeyTypeName, Function<String, T> createFunction,
+                                                                 Logger logger) {
+        return new MySQLCrudManager<>(hostname, port, database, user, password, tableName, primaryKeyName,
                 primaryKeyLength, crudableKeyTypeName, createFunction, logger);
     }
 
-    public static <T extends Crudable> MySQLManager<T> MYSQL(String hostname, int port, String database,
-                                                             String user, String password, String tableName,
-                                                             String primaryKeyName, int primaryKeyLength,
-                                                             String crudableKeyTypeName, Function<String, T> createFunction) {
-        return new MySQLManager<>(hostname, port, database, user, password, tableName, primaryKeyName,
+    public static <T extends Crudable> MySQLCrudManager<T> MYSQL(String hostname, int port, String database,
+                                                                 String user, String password, String tableName,
+                                                                 String primaryKeyName, int primaryKeyLength,
+                                                                 String crudableKeyTypeName, Function<String, T> createFunction) {
+        return new MySQLCrudManager<>(hostname, port, database, user, password, tableName, primaryKeyName,
                 primaryKeyLength, crudableKeyTypeName, createFunction, null);
     }
 

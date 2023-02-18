@@ -1,6 +1,7 @@
 package me.anjoismysign.anjo.crud;
 
 import java.sql.Connection;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -23,7 +24,11 @@ public interface SQLCrudManager<T extends Crudable> extends CrudManager<T> {
 
     void update(T crudable, int version);
 
-    T createAndRegister();
+    default T createAndRegister() {
+        return createAndRegister(UUID.randomUUID().toString());
+    }
+
+    T createAndRegister(String id);
 
     default void forEachRecord(Consumer<T> consumer) {
         forEachRecord((crudable, version) -> consumer.accept(crudable));

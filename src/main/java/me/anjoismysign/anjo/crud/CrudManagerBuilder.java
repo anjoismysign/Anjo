@@ -3,38 +3,38 @@ package me.anjoismysign.anjo.crud;
 import me.anjoismysign.anjo.logger.Logger;
 
 import java.io.File;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class CrudManagerBuilder {
     public static <T extends Crudable> MySQLManager<T> MYSQL(String hostname, int port, String database,
                                                              String user, String password, String tableName,
                                                              String primaryKeyName, int primaryKeyLength,
-                                                             String crudableKeyTypeName, Supplier<T> createSupplier,
+                                                             String crudableKeyTypeName, Function<String, T> createFunction,
                                                              Logger logger) {
         return new MySQLManager<>(hostname, port, database, user, password, tableName, primaryKeyName,
-                primaryKeyLength, crudableKeyTypeName, createSupplier, logger);
+                primaryKeyLength, crudableKeyTypeName, createFunction, logger);
     }
 
     public static <T extends Crudable> MySQLManager<T> MYSQL(String hostname, int port, String database,
                                                              String user, String password, String tableName,
                                                              String primaryKeyName, int primaryKeyLength,
-                                                             String crudableKeyTypeName, Supplier<T> createSupplier) {
+                                                             String crudableKeyTypeName, Function<String, T> createFunction) {
         return new MySQLManager<>(hostname, port, database, user, password, tableName, primaryKeyName,
-                primaryKeyLength, crudableKeyTypeName, createSupplier, null);
+                primaryKeyLength, crudableKeyTypeName, createFunction, null);
     }
 
     public static <T extends Crudable> SQLiteCrudManager<T> SQLITE(String database, File path, String tableName,
                                                                    String primaryKeyName, int primaryKeyLength,
-                                                                   String crudableKeyTypeName, Supplier<T> createSupplier,
+                                                                   String crudableKeyTypeName, Function<String, T> createFunction,
                                                                    Logger logger) {
         return new SQLiteCrudManager<>(database, path, tableName, primaryKeyName,
-                primaryKeyLength, crudableKeyTypeName, createSupplier, logger);
+                primaryKeyLength, crudableKeyTypeName, createFunction, logger);
     }
 
     public static <T extends Crudable> SQLiteCrudManager<T> SQLITE(String database, File path, String table,
                                                                    String primaryKeyName, int primaryKeyLength,
-                                                                   String crudableKeyTypeName, Supplier<T> createSupplier) {
+                                                                   String crudableKeyTypeName, Function<String, T> createFunction) {
         return new SQLiteCrudManager<>(database, path, table, primaryKeyName,
-                primaryKeyLength, crudableKeyTypeName, createSupplier, null);
+                primaryKeyLength, crudableKeyTypeName, createFunction, null);
     }
 }

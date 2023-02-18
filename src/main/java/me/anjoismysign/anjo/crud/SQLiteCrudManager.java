@@ -6,51 +6,30 @@ import me.anjoismysign.anjo.logger.Logger;
 import me.anjoismysign.anjo.sql.SQLHolder;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.BiConsumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> {
     private SQLHolder holder;
     private final String database, tableName, primaryKeyName, crudableKeyTypeName;
     private final int primaryKeyLength;
     private final File path;
-    private final Supplier<T> createSupplier;
+    private final Function<String, T> createFunction;
     private final Logger logger;
 
     protected SQLiteCrudManager(String database, File path, String tableName, String primaryKeyName,
-                                int primaryKeyLength, String crudableKeyTypeName, Supplier<T> createSupplier,
+                                int primaryKeyLength, String crudableKeyTypeName,
+                                Function<String, T> createFunction,
                                 Logger logger) {
         this.tableName = tableName;
         this.primaryKeyName = primaryKeyName;
         this.primaryKeyLength = primaryKeyLength;
         this.crudableKeyTypeName = crudableKeyTypeName;
-        this.createSupplier = createSupplier;
-        this.database = database;
-        this.path = path;
-        this.logger = logger;
-        load();
-    }
-
-    protected SQLiteCrudManager(String database, File path, String tableName, String primaryKeyName,
-                                int primaryKeyLength, String crudableKeyTypeName, Class<T> clazz,
-                                Logger logger) {
-        this.tableName = tableName;
-        this.primaryKeyName = primaryKeyName;
-        this.primaryKeyLength = primaryKeyLength;
-        this.crudableKeyTypeName = crudableKeyTypeName;
-        this.createSupplier = () -> {
-            try {
-                return clazz.getDeclaredConstructor().newInstance();
-            } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-            throw new RuntimeException("Failed to create instance of " + clazz.getName());
-        };
+        this.createFunction = createFunction;
         this.database = database;
         this.path = path;
         this.logger = logger;
@@ -104,14 +83,15 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     }
 
     /**
-     * Creates a new instance of the AnjoCrudable and registers it in the database.
+     * Creates a new instance of the Crudable and registers it in the database
+     * using the given identification.
      *
-     * @return The new instance of the AnjoCrudable.
+     * @param identification The identification to use.
+     * @return The new instance of the Crudable.
      */
     @Override
-    public T createAndRegister() {
-        T anjoCrudable = create();
-        String id = anjoCrudable.getIdentification();
+    public T createAndRegister(String identification) {
+        T Crudable = create(identification);
         Connection connection = null;
 //        String sql = "INSERT IGNORE INTO " + TABLE_NAME(); //MySQL
         String sql = "INSERT OR IGNORE INTO " + getTableName();
@@ -120,8 +100,8 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
             PreparedStatement preparedStatement = connection.prepareStatement(sql +
                     " (" + getPrimaryKeyName() + ") VALUES (?)");
             try {
-                if (!exists(id)) {
-                    preparedStatement.setString(1, id);
+                if (!exists(identification)) {
+                    preparedStatement.setString(1, identification);
                     preparedStatement.executeUpdate();
                 }
                 if (preparedStatement != null) {
@@ -148,26 +128,27 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                     e.printStackTrace();
                 }
         }
-        return anjoCrudable;
+        return Crudable;
     }
 
     /**
-     * @return a new instance of the AnjoCrudable
+     * @param identification The identification to use
+     * @return a new instance of the Crudable
      */
     @Override
-    public T create() {
-        return createSupplier.get();
+    public T create(String identification) {
+        return createFunction.apply(identification);
     }
 
     /**
-     * @param id The id of the AnjoCrudable to get
-     * @return The AnjoCrudable with the given id
+     * @param id The id of the Crudable to get
+     * @return The Crudable with the given id
      */
     @Override
     public T read(String id) {
         ResultSet resultSet = this.holder.getDatabase()
                 .selectRowByPrimaryKey(getPrimaryKeyName(), id, getTableName());
-        T anjoCrudable;
+        T Crudable;
         try {
             if (resultSet.next()) {
                 byte[] bytes = resultSet.getBytes(getCrudableKeyTypeName());
@@ -175,8 +156,8 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
                 @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
-                anjoCrudable = updatableSerializable.getValue();
-                return anjoCrudable;
+                Crudable = updatableSerializable.getValue();
+                return Crudable;
             } else {
                 resultSet.close();
                 resultSet.getStatement().close();
@@ -197,23 +178,23 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     }
 
     /**
-     * @param anjoCrudable The AnjoCrudable to be updated (defaults version to 0)
+     * @param Crudable The Crudable to be updated (defaults version to 0)
      */
     @Override
-    public void update(T anjoCrudable) {
-        update(anjoCrudable, 0);
+    public void update(T Crudable) {
+        update(Crudable, 0);
     }
 
     /**
-     * Updates the database with the given AnjoCrudable and version
+     * Updates the database with the given Crudable and version
      *
-     * @param anjoCrudable The AnjoCrudable to update
-     * @param version      The version to update to
+     * @param Crudable The Crudable to update
+     * @param version  The version to update to
      */
     @Override
-    public void update(T anjoCrudable, int version) {
-        UpdatableSerializableHandler<T> handler = newUpdatable(anjoCrudable, 0);
-        String id = anjoCrudable.getIdentification();
+    public void update(T Crudable, int version) {
+        UpdatableSerializableHandler<T> handler = newUpdatable(Crudable, 0);
+        String id = Crudable.getIdentification();
         PreparedStatement statement = this.holder.getDatabase()
                 .updateDataSet(getPrimaryKeyName(), getTableName(), crudableKeyTypePrepareStatement());
         try {
@@ -233,7 +214,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     }
 
     /**
-     * @param id The id of the AnjoCrudable to delete
+     * @param id The id of the Crudable to delete
      */
     @Override
     public void delete(String id) {
@@ -255,15 +236,15 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     }
 
     /**
-     * @param biConsumer First parameter is AnjoCrudable, second parameter is the version
+     * @param biConsumer First parameter is Crudable, second parameter is the version
      */
     public void forEachRecord(BiConsumer<T, Integer> biConsumer) {
         this.holder.getDatabase().selectAllFromDatabase(getTableName(), resultSet -> {
             try {
                 byte[] bytes = resultSet.getBytes(getCrudableKeyTypeName());
                 @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
-                T anjoCrudable = updatableSerializable.getValue();
-                biConsumer.accept(anjoCrudable, updatableSerializable.getVersion());
+                T Crudable = updatableSerializable.getValue();
+                biConsumer.accept(Crudable, updatableSerializable.getVersion());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

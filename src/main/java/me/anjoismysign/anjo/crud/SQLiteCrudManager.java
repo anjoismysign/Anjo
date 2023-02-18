@@ -99,24 +99,13 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
             connection = this.holder.getDatabase().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql +
                     " (" + getPrimaryKeyName() + ") VALUES (?)");
-            try {
-                if (!exists(identification)) {
-                    preparedStatement.setString(1, identification);
-                    preparedStatement.executeUpdate();
-                }
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                    preparedStatement.getConnection().close();
-                }
-            } catch (Throwable throwable) {
-                if (preparedStatement != null)
-                    try {
-                        preparedStatement.close();
-                        preparedStatement.getConnection().close();
-                    } catch (Throwable throwable1) {
-                        throwable.addSuppressed(throwable1);
-                    }
-                throw throwable;
+            if (!exists(identification)) {
+                preparedStatement.setString(1, identification);
+                preparedStatement.executeUpdate();
+            }
+            if (preparedStatement != null) {
+                preparedStatement.close();
+                preparedStatement.getConnection().close();
             }
         } catch (SQLException e) {
             e.printStackTrace();

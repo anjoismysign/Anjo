@@ -139,41 +139,28 @@ public abstract class SQLDatabase {
      * @param table      The table to create
      * @param columns    The columns to create
      * @param primaryKey The primary key to use
+     * @return "true" if prepared statement was executed, "false" otherwise
      */
-    public void createTable(String table, String columns, String primaryKey) {
+    public boolean createTable(String table, String columns, String primaryKey) {
         Connection connection = null;
         try {
             connection = getConnection();
+            if (connection == null)
+                return false;
             PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + table + " (" + columns + ",PRIMARY KEY(" + primaryKey + "))");
-            try {
-                preparedStatement.executeUpdate();
-                if (preparedStatement != null)
-                    preparedStatement.close();
-            } catch (SQLException e) {
-                if (preparedStatement != null)
-                    try {
-                        preparedStatement.close();
-                    } catch (SQLException e1) {
-                        e1.printStackTrace();
-                    }
-                e.printStackTrace();
-            } finally {
-                if (preparedStatement != null)
-                    try {
-                        preparedStatement.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-            }
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         } finally {
-            if (connection != null)
-                try {
+            try {
+                if (connection != null)
                     connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -190,17 +177,7 @@ public abstract class SQLDatabase {
         try {
             connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " WHERE " + keyType + "='" + key + "'");
-            try {
-                return preparedStatement.executeQuery().next();
-            } catch (Throwable throwable) {
-                if (preparedStatement != null)
-                    try {
-                        preparedStatement.close();
-                    } catch (Throwable throwable1) {
-                        throwable.addSuppressed(throwable1);
-                    }
-                throw throwable;
-            }
+            return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

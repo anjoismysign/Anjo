@@ -24,11 +24,11 @@ public final class MySQL extends SQLDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
             getLogger().singleError("Failed to connect to 'MySQL' Database using following credentials: \n" +
-                    "Hostname: " + hostName + "\n" +
-                    "Port: " + port + "\n" +
-                    "Database: " + database + "\n" +
-                    "User: " + user + "\n\n" +
-                    "Be sure that password match");
+                    "Hostname: '" + hostName + "', " +
+                    "Port: '" + port + "', " +
+                    "Database: '" + database + "', " +
+                    "User: '" + user + "'. \n" +
+                    "Be sure that password match!\n\n");
         }
         return connection;
     }

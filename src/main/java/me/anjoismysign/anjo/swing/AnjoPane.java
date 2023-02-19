@@ -32,6 +32,10 @@ public class AnjoPane {
      * @param components The form components.
      * @param title      The form title.
      * @param optionType Types of buttons to be shown.
+     *                   -1: OK button
+     *                   0:  YES/NO buttons
+     *                   1:  YES/NO/CANCEL buttons
+     *                   2:  OK/CANCEL buttons
      * @param image      Image to be used as icon through the form
      * @return The form
      * @see AnjoComponent

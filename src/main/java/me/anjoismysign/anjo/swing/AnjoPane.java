@@ -32,6 +32,26 @@ public class AnjoPane {
      * @param components The form components.
      * @param title      The form title.
      * @param optionType Types of buttons to be shown.
+     * @param image      Image to be used as icon through the form
+     * @return The form
+     * @see AnjoComponent
+     */
+    public static AnjoPane build(Collection<AnjoComponent> components,
+                                 String title, OptionType optionType,
+                                 Image image) {
+        int optionTypeInt = switch (optionType) {
+            case OK -> -1;
+            case YES_NO -> 0;
+            case YES_NO_CANCEL -> 1;
+            case OK_CANCEL -> 2;
+        };
+        return build(components, title, optionTypeInt, image);
+    }
+
+    /**
+     * @param components The form components.
+     * @param title      The form title.
+     * @param optionType Types of buttons to be shown.
      *                   -1: OK button
      *                   0:  YES/NO buttons
      *                   1:  YES/NO/CANCEL buttons

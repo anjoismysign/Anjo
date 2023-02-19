@@ -5,6 +5,7 @@ import me.anjoismysign.anjo.entities.Result;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author anjoismysign
@@ -36,16 +37,25 @@ public class AnjoPane {
      * @return The form
      * @see AnjoComponent
      */
-    public static AnjoPane build(Collection<AnjoComponent> components,
-                                 String title, OptionType optionType,
-                                 Image image) {
+    public static AnjoPane build(String title, OptionType optionType, Image image, AnjoComponent... components) {
         int optionTypeInt = switch (optionType) {
             case OK -> -1;
             case YES_NO -> 0;
             case YES_NO_CANCEL -> 1;
             case OK_CANCEL -> 2;
         };
-        return build(components, title, optionTypeInt, image);
+        return build(List.of(components), title, optionTypeInt, image);
+    }
+
+    /**
+     * @param components The form components.
+     * @param title      The form title.
+     * @param optionType Types of buttons to be shown.
+     * @return The form
+     * @see AnjoComponent
+     */
+    public static AnjoPane build(String title, OptionType optionType, AnjoComponent... components) {
+        return build(title, optionType, null, components);
     }
 
     /**
@@ -129,6 +139,28 @@ public class AnjoPane {
     public int getResult() {
         return result;
     }
+
+    /**
+     * @return true if the user clicked "CANCEL" or closed the window
+     */
+    public boolean didCancel() {
+        return result == 2 || result == -1;
+    }
+
+    /**
+     * @return true if the user clicked "NO"
+     */
+    public boolean saidNo() {
+        return result == 1;
+    }
+
+    /**
+     * @return true if the user clicked "YES/OK"
+     */
+    public boolean saidYes() {
+        return result == 0;
+    }
+
 
     /**
      * Gets the component of a row.

@@ -12,6 +12,14 @@ import java.util.function.Consumer;
 
 public class AnjoTextField extends AnjoComponent {
 
+    public static AnjoTextField build(String label) {
+        return new AnjoTextField(label);
+    }
+
+    public static AnjoTextField build(JLabel label) {
+        return new AnjoTextField(label);
+    }
+
     public AnjoTextField(String label) {
         super(label, new JTextField());
     }

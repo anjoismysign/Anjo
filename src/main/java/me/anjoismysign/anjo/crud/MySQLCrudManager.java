@@ -110,6 +110,8 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
             statement.executeUpdate();
             if (version != 0)
                 log("Updated record with id " + id + " to version " + version + ".");
+            else
+                log("Updated record with id " + id + ".");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

@@ -196,7 +196,7 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-                return create(id);
+                return createAndRegister(id);
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -162,7 +162,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-                return create(id);
+                return createAndRegister(id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -261,7 +261,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     public Logger getLogger() {
         return logger;
     }
-    
+
     private void log(String message) {
         if (logger != null)
             logger.log(message);

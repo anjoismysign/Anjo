@@ -38,10 +38,11 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
 
     public void load() {
         holder = new SQLHolder(database, path, logger);
-        if (holder.getDatabase().createTable(getTableName(), getPrimaryKeyName() +
+        boolean isNewTable = holder.getDatabase().createTable(getTableName(), getPrimaryKeyName() +
                 " VARCHAR(" + getPrimaryKeyLength() + ")," + getCrudableKeyTypeName() +
-                " BLOB", getPrimaryKeyName()))
-            logger.log("Create table " + getTableName() + " with primary key " + getPrimaryKeyName() +
+                " BLOB", getPrimaryKeyName());
+        if (isNewTable)
+            log("Create table " + getTableName() + " with primary key " + getPrimaryKeyName() +
                     " and type " + getCrudableKeyTypeName() + " " +
                     "was executed successfully.");
     }
@@ -260,7 +261,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     public Logger getLogger() {
         return logger;
     }
-
+    
     private void log(String message) {
         if (logger != null)
             logger.log(message);

@@ -38,9 +38,10 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
 
     public void load() {
         holder = new SQLHolder(hostname, port, database, user, password, logger);
-        if (holder.getDatabase().createTable(getTableName(), getPrimaryKeyName() +
+        boolean isNewTable = holder.getDatabase().createTable(getTableName(), getPrimaryKeyName() +
                 " VARCHAR(" + getPrimaryKeyLength() + ")," + getCrudableKeyTypeName() +
-                " BLOB", getPrimaryKeyName()))
+                " BLOB", getPrimaryKeyName());
+        if (isNewTable)
             log("Create table " + getTableName() + " with primary key " + getPrimaryKeyName() + "" +
                     "and type " + getCrudableKeyTypeName() + " " +
                     "was executed successfully.");
@@ -241,11 +242,6 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
         }
     }
 
-    @Override
-    public Logger getLogger() {
-        return logger;
-    }
-
     /**
      * @param biConsumer First parameter is Crudable, second parameter is the version
      */
@@ -261,6 +257,11 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
     }
 
     private void log(String message) {

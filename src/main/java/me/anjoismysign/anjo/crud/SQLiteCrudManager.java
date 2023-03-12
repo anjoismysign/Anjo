@@ -116,7 +116,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 preparedStatement.getConnection().close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.singleError(e.getMessage());
         } finally {
             if (connection != null)
                 try {
@@ -157,10 +157,11 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 log("Read record with id " + id + " successfully.");
                 return crudable;
             } else {
+                log("Record with id " + id + " does not exist.");
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-                return create();
+                return create(id);
             }
         } catch (SQLException e) {
             e.printStackTrace();

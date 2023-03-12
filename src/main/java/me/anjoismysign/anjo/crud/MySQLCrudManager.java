@@ -188,14 +188,14 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 resultSet.getStatement().getConnection().close();
                 @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
                 crudable = updatableSerializable.getValue();
-                log("Read record with id " + id + ".");
+                log("Read record with id " + id + " successfully.");
                 return crudable;
             } else {
                 log("Record with id " + id + " does not exist.");
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-                return create();
+                return create(id);
             }
         } catch (SQLException e) {
             e.printStackTrace();

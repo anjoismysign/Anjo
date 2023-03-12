@@ -173,6 +173,10 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
     }
 
     /**
+     * Will attempt to read the Crudable with the given id from the database.
+     * If not found, will create a new instance of the Crudable and register it
+     * using the given id.
+     *
      * @param id The id of the Crudable to get
      * @return The Crudable with the given id
      */

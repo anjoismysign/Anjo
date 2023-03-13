@@ -4,6 +4,7 @@ import me.anjoismysign.anjo.entities.UpdatableSerializable;
 import me.anjoismysign.anjo.entities.UpdatableSerializableHandler;
 import me.anjoismysign.anjo.logger.Logger;
 import me.anjoismysign.anjo.sql.SQLHolder;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -133,8 +134,8 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
      * @return The new instance of the Crudable.
      */
     @Override
-    public T createAndRegister(String identification) {
-        T crudable = create(identification);
+    public T create(String identification) {
+        T crudable = createFunction.apply(identification);
         Connection connection = null;
         String sql = "INSERT IGNORE INTO " + getTableName();
         try {
@@ -161,15 +162,6 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 }
         }
         return crudable;
-    }
-
-    /**
-     * @param identification The identification that the Crudable should be created with
-     * @return a new instance of the Crudable
-     */
-    @Override
-    public T create(String identification) {
-        return createFunction.apply(identification);
     }
 
     /**
@@ -200,7 +192,7 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-                return createAndRegister(id);
+                return create(id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -216,6 +208,8 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
     }
 
     /**
+     * Updates a specificed Crudable in the database.
+     *
      * @param crudable The Crudable to be updated
      */
     @Override
@@ -224,6 +218,8 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
     }
 
     /**
+     * Deletes the Crudable with the given id from the database.
+     *
      * @param id The id of the Crudable to delete
      */
     @Override
@@ -263,6 +259,13 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
         });
     }
 
+    /**
+     * Returns the logger for the CrudManager.
+     * Some implementations may return null.
+     *
+     * @return The logger for the CrudManager
+     */
+    @Nullable
     @Override
     public Logger getLogger() {
         return logger;

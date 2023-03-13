@@ -99,8 +99,8 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
      * @return The new instance of the Crudable.
      */
     @Override
-    public T createAndRegister(String identification) {
-        T crudable = create(identification);
+    public T create(String identification) {
+        T crudable = createFunction.apply(identification);
         Connection connection = null;
         String sql = "INSERT OR IGNORE INTO " + getTableName();
         try {
@@ -127,15 +127,6 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 }
         }
         return crudable;
-    }
-
-    /**
-     * @param identification The identification to use
-     * @return a new instance of the Crudable
-     */
-    @Override
-    public T create(String identification) {
-        return createFunction.apply(identification);
     }
 
     /**
@@ -166,7 +157,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-                return createAndRegister(id);
+                return create(id);
             }
         } catch (SQLException e) {
             e.printStackTrace();

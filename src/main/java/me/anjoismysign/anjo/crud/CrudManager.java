@@ -2,6 +2,8 @@ package me.anjoismysign.anjo.crud;
 
 import me.anjoismysign.anjo.entities.UpdatableSerializableHandler;
 import me.anjoismysign.anjo.logger.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -17,6 +19,8 @@ public interface CrudManager<T extends Serializable> {
         return create(UUID.randomUUID().toString());
     }
 
+    boolean exists(String id);
+
     /**
      * Creates a new instance of the Crudable and registers it in the database
      * using the given identification. Will only update the identification.
@@ -26,6 +30,7 @@ public interface CrudManager<T extends Serializable> {
      */
     T create(String id);
 
+
     /**
      * Will attempt to read the Crudable with the given id from the database.
      * If not found, will create a new instance of the Crudable and register it
@@ -34,7 +39,18 @@ public interface CrudManager<T extends Serializable> {
      * @param id The id of the Crudable to get
      * @return The Crudable with the given id
      */
+    @NotNull
     T read(String id);
+
+    /**
+     * Will attempt to read the Crudable with the given id from the database.
+     * If not found/exists, will return null.
+     *
+     * @param id The id of the Crudable to get
+     * @return The Crudable with the given id
+     */
+    @Nullable
+    T readOrNull(String id);
 
     /**
      * Updates a specificed Crudable in the database.

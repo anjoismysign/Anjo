@@ -4,6 +4,7 @@ import me.anjoismysign.anjo.entities.UpdatableSerializable;
 import me.anjoismysign.anjo.entities.UpdatableSerializableHandler;
 import me.anjoismysign.anjo.logger.Logger;
 import me.anjoismysign.anjo.sql.SQLHolder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
     private SQLHolder holder;
@@ -83,6 +85,7 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
      * @param id The primary key id
      * @return Whether the record exists
      */
+    @Override
     public boolean exists(String id) {
         boolean exists = this.holder.getDatabase().exists(getTableName(),
                 getPrimaryKeyName(), id);
@@ -166,14 +169,32 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
 
     /**
      * Will attempt to read the Crudable with the given id from the database.
+     * If not found/exists, will return null.
+     *
+     * @param id The id of the Crudable to get
+     * @return The Crudable with the given id
+     */
+    @Nullable
+    @Override
+    public T readOrNull(String id) {
+        return readOrGenerate(id, () -> create(id));
+    }
+
+    /**
+     * Will attempt to read the Crudable with the given id from the database.
      * If not found, will create a new instance of the Crudable and register it
      * using the given id.
      *
      * @param id The id of the Crudable to get
      * @return The Crudable with the given id
      */
+    @NotNull
     @Override
     public T read(String id) {
+        return readOrGenerate(id, () -> null);
+    }
+
+    private T readOrGenerate(String id, Supplier<T> replacement) {
         ResultSet resultSet = this.holder.getDatabase()
                 .selectRowByPrimaryKey(getPrimaryKeyName(), id, getTableName());
         T crudable;
@@ -192,7 +213,7 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-                return create(id);
+                return replacement.get();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -204,7 +225,7 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 e.printStackTrace();
             }
         }
-        return create();
+        return replacement.get();
     }
 
     /**

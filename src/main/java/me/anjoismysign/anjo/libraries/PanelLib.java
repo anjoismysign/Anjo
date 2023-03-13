@@ -72,7 +72,7 @@ public class PanelLib {
         String lowercased = input.toLowerCase();
         if (!lowercased.equals("yes") && !lowercased.equals("no")) {
             PanelLib.showMessage(title, "'" + input + "' is neither 'yes' or 'no'");
-            return confirmar(title, message);
+            return confirm(title, message);
         }
         if (lowercased.equals("yes"))
             return true;
@@ -90,41 +90,6 @@ public class PanelLib {
      */
     public static boolean confirm(String message, String errorMessage) {
         return confirm("", message, errorMessage);
-    }
-
-    /**
-     * Pide un boolean mediante un JOptionPane
-     * De no ingresarse "yes" o "no", se hace recursión
-     * La diferencia de este método es que permite poner un título al JOptionPane
-     *
-     * @param title        Título del JOptionPane
-     * @param message      Mensaje mostrado antes de "Type 'yes' or 'no'"
-     * @param errorMessage Mensaje mostrado en caso de que el input sea inválido
-     * @return true en caso de "yes", false en caso de "no"
-     */
-    public static boolean confirmar(String title, String message, String errorMessage) {
-        String input = PanelLib.requestString(message + " \nIngrese 'si' o 'no'", errorMessage);
-        String minusculas = input.toLowerCase();
-        if (!minusculas.equals("si") && !minusculas.equals("no")) {
-            PanelLib.showMessage(title, "'" + input + "' no es ni 'si' ni 'no'");
-            return confirmar(title, message, errorMessage);
-        }
-        if (minusculas.equals("si"))
-            return true;
-        else
-            return false;
-    }
-
-    /**
-     * Pide un boolean mediante un JOptionPane
-     * De no ingresarse "yes" o "no", se hace recursión
-     *
-     * @param message      Mensaje mostrado antes de "Type 'yes' or 'no'"
-     * @param errorMessage Mensaje mostrado en caso de que el input sea inválido
-     * @return true en caso de "yes", false en caso de "no"
-     */
-    public static boolean confirmar(String message, String errorMessage) {
-        return confirmar("", message, errorMessage);
     }
 
     /**

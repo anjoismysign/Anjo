@@ -27,7 +27,7 @@ public class AnjoClickListener extends AnjoConsumerListener implements MouseList
     @Override
     public void mouseClicked(MouseEvent e) {
         Component component = e.getComponent();
-        if (component.equals(getComponent())) {
+        if (!component.equals(getComponent())) {
             return;
         }
         getConsumer().accept(getAnjoComponent());

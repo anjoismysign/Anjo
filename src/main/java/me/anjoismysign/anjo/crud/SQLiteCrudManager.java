@@ -143,7 +143,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     @Nullable
     @Override
     public T readOrNull(String id) {
-        return readOrGenerate(id, () -> create(id));
+        return readOrGenerate(id, () -> null);
     }
 
     /**
@@ -157,7 +157,7 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
     @NotNull
     @Override
     public T read(String id) {
-        return readOrGenerate(id, () -> null);
+        return readOrGenerate(id, () -> create(id));
     }
 
     private T readOrGenerate(String id, Supplier<T> replacement) {

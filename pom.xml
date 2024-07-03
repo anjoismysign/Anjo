@@ -6,7 +6,7 @@
 
     <groupId>me.anjoismysign.anjo</groupId>
     <artifactId>anjo</artifactId>
-    <version>0.3.9m</version>
+    <version>0.3.13</version>
 
     <scm>
         <connection>scm:git:git@github.com:anjoismysign/Anjo.git</connection>
@@ -35,8 +35,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
                 <version>3.10.1</version>
             </plugin>

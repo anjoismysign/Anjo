@@ -108,7 +108,7 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
         UpdatableSerializableHandler<T> handler = newUpdatable(crudable, 0);
         String id = crudable.getIdentification();
         PreparedStatement statement = this.holder.getDatabase()
-                .updateDataSet(getPrimaryKeyName(), getTableName(), getCrudableKeyTypeName());
+                .updateDataSet(getPrimaryKeyName(), getTableName(), crudableKeyTypePrepareStatement());
         try {
             statement.setBytes(1, handler.serialize());
             statement.setString(2, id);
@@ -148,7 +148,7 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
             if (!exists(identification)) {
                 preparedStatement.setString(1, identification);
                 preparedStatement.executeUpdate();
-                log("Created record with id " + identification + ".");
+                log("Created new record with id " + identification + ".");
             }
             if (preparedStatement != null) {
                 preparedStatement.close();

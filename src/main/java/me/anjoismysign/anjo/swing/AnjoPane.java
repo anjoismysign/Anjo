@@ -1,11 +1,15 @@
 package me.anjoismysign.anjo.swing;
 
 import me.anjoismysign.anjo.entities.Result;
+import me.anjoismysign.anjo.swing.components.AnjoFileRepositoryPanel;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author anjoismysign
@@ -30,21 +34,29 @@ public class AnjoPane {
     }
 
     /**
-     * @param components The form components.
-     * @param title      The form title.
+     * @param title      The title.
      * @param optionType Types of buttons to be shown.
      * @param image      Image to be used as icon through the form
+     * @param changeTaskbarIcon true if the taskbar icon should be changed
+     * @param onDrop   Runnable to be called when a file is dropped, if null, it will be ignored
+     * @param components The components.
      * @return The form
      * @see AnjoComponent
      */
-    public static AnjoPane build(String title, OptionType optionType, Image image, AnjoComponent... components) {
+    public static AnjoPane build(String title,
+                                 OptionType optionType,
+                                 Image image,
+                                 boolean changeTaskbarIcon,
+                                 @Nullable Consumer<File> onDrop,
+                                 AnjoComponent... components) {
         int optionTypeInt = switch (optionType) {
             case OK -> -1;
             case YES_NO -> 0;
             case YES_NO_CANCEL -> 1;
             case OK_CANCEL -> 2;
         };
-        return build(List.of(components), title, optionTypeInt, image);
+        return build(List.of(components), title, optionTypeInt, image,
+                changeTaskbarIcon, onDrop);
     }
 
     /**
@@ -55,7 +67,7 @@ public class AnjoPane {
      * @see AnjoComponent
      */
     public static AnjoPane build(String title, OptionType optionType, AnjoComponent... components) {
-        return build(title, optionType, null, components);
+        return build(title, optionType, null, false,null, components);
     }
 
     /**
@@ -70,9 +82,34 @@ public class AnjoPane {
      * @return The form
      * @see AnjoComponent
      */
+    public static AnjoPane build (Collection<AnjoComponent> components,
+                                  String title,
+                                  int optionType,
+                                  Image image){
+        return build(components, title, optionType, image,
+                true,null);
+    }
+
+    /**
+     * @param components The form components.
+     * @param title      The form title.
+     * @param optionType Types of buttons to be shown.
+     *                   -1: OK button
+     *                   0:  YES/NO buttons
+     *                   1:  YES/NO/CANCEL buttons
+     *                   2:  OK/CANCEL buttons
+     * @param image      Image to be used as icon through the form
+     * @param changeTaskbarIcon true if the taskbar icon should be changed
+     * @param onDrop    Runnable to be called when a file is dropped
+     * @return The form
+     * @see AnjoComponent
+     */
     public static AnjoPane build(Collection<AnjoComponent> components,
-                                 String title, int optionType,
-                                 Image image) {
+                                 String title,
+                                 int optionType,
+                                 Image image,
+                                 boolean changeTaskbarIcon,
+                                 @Nullable Consumer<File> onDrop) {
         AnjoPane pane = new AnjoPane(new JPanel(new GridLayout(components.size(), 2)));
         JPanel panel = pane.getPanel();
         components.forEach(component -> {
@@ -80,7 +117,12 @@ public class AnjoPane {
             panel.add(component.getComponent());
         });
         if (image != null) {
-            JPanel master = new JPanel(new BorderLayout());
+            if (Taskbar.isTaskbarSupported() && changeTaskbarIcon) {
+                Taskbar taskbar = Taskbar.getTaskbar();
+                if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE))
+                    taskbar.setIconImage(image);
+            }
+            JPanel master = onDrop != null ? new AnjoFileRepositoryPanel(new BorderLayout(), onDrop) : new JPanel(new BorderLayout());
             JPanel imagePanel = new JPanel(new FlowLayout());
             JLabel label = new JLabel(new ImageIcon(image));
             imagePanel.add(label);

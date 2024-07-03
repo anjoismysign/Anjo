@@ -50,13 +50,8 @@ public class AnjoConfirmDialog {
         JPanel foot;
         JDialog dialog = new JDialog();
         dialog.setTitle(title);
-        if (image != null) {
-            if (Taskbar.isTaskbarSupported())
-                //windows
-                if (Taskbar.getTaskbar().isSupported(Taskbar.Feature.ICON_IMAGE))
-                    Taskbar.getTaskbar().setIconImage(image);
+        if (image != null)
             dialog.setIconImage(image.getScaledInstance(32, 32, Image.SCALE_SMOOTH));
-        }
         dialog.add(master);
         switch (optionType) {
             case -1 -> {

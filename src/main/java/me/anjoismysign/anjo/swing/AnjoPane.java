@@ -2,6 +2,7 @@ package me.anjoismysign.anjo.swing;
 
 import me.anjoismysign.anjo.entities.Result;
 import me.anjoismysign.anjo.swing.components.AnjoFileRepositoryPanel;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -43,12 +44,12 @@ public class AnjoPane {
      * @return The form
      * @see AnjoComponent
      */
-    public static AnjoPane build(String title,
+    public static AnjoPane build(@NotNull  String title,
                                  OptionType optionType,
-                                 Image image,
+                                 @Nullable Image image,
                                  boolean changeTaskbarIcon,
                                  @Nullable Consumer<File> onDrop,
-                                 AnjoComponent... components) {
+                                 @NotNull AnjoComponent... components) {
         int optionTypeInt = switch (optionType) {
             case OK -> -1;
             case YES_NO -> 0;
@@ -66,7 +67,9 @@ public class AnjoPane {
      * @return The form
      * @see AnjoComponent
      */
-    public static AnjoPane build(String title, OptionType optionType, AnjoComponent... components) {
+    public static AnjoPane build(@NotNull String title,
+                                 @NotNull OptionType optionType,
+                                 @NotNull AnjoComponent... components) {
         return build(title, optionType, null, false,null, components);
     }
 
@@ -82,10 +85,10 @@ public class AnjoPane {
      * @return The form
      * @see AnjoComponent
      */
-    public static AnjoPane build (Collection<AnjoComponent> components,
-                                  String title,
+    public static AnjoPane build (@NotNull Collection<AnjoComponent> components,
+                                  @NotNull  String title,
                                   int optionType,
-                                  Image image){
+                                  @Nullable Image image){
         return build(components, title, optionType, image,
                 true,null);
     }
@@ -104,34 +107,66 @@ public class AnjoPane {
      * @return The form
      * @see AnjoComponent
      */
-    public static AnjoPane build(Collection<AnjoComponent> components,
-                                 String title,
+    public static AnjoPane build(@NotNull Collection<AnjoComponent> components,
+                                 @NotNull String title,
                                  int optionType,
-                                 Image image,
+                                 @Nullable Image image,
                                  boolean changeTaskbarIcon,
                                  @Nullable Consumer<File> onDrop) {
-        AnjoPane pane = new AnjoPane(new JPanel(new GridLayout(components.size(), 2)));
-        JPanel panel = pane.getPanel();
-        components.forEach(component -> {
-            panel.add(component.getLabel());
-            panel.add(component.getComponent());
-        });
-        if (image != null) {
-            if (Taskbar.isTaskbarSupported() && changeTaskbarIcon) {
-                Taskbar taskbar = Taskbar.getTaskbar();
-                if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE))
-                    taskbar.setIconImage(image);
-            }
-            JPanel master = onDrop != null ? new AnjoFileRepositoryPanel(new BorderLayout(), onDrop) : new JPanel(new BorderLayout());
-            JPanel imagePanel = new JPanel(new FlowLayout());
-            JLabel label = new JLabel(new ImageIcon(image));
-            imagePanel.add(label);
-            master.add(imagePanel, BorderLayout.CENTER);
-            master.add(panel, BorderLayout.PAGE_END);
-            pane.setResult(new AnjoConfirmDialog(master, title, optionType, image).getResult());
-            return pane;
+        JPanel componentsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints noImageConstraints = new GridBagConstraints();
+        noImageConstraints.gridwidth = 1;
+        noImageConstraints.fill = GridBagConstraints.HORIZONTAL;
+        noImageConstraints.insets = new Insets(5, 5, 5, 5);
+        int row = 0;
+        for (AnjoComponent component : components) {
+            noImageConstraints.gridx = 0;
+            noImageConstraints.gridy = row;
+            noImageConstraints.weightx = 0.0;
+            componentsPanel.add(component.getLabel(), noImageConstraints);
+
+            noImageConstraints.gridx = 1;
+            noImageConstraints.weightx = 1.0;
+            componentsPanel.add(component.getComponent(), noImageConstraints);
+
+            row++;
         }
-        pane.setResult(new AnjoConfirmDialog(panel, title, optionType, null).getResult());
+        AnjoPane pane = new AnjoPane(componentsPanel);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenHeight = screenSize.height;
+        int height = (int) (screenHeight / 2.15); // 50% of screen height
+        int width = (int) (height / 1.35); // 33% of height
+        if (image != null) {
+            JPanel master = onDrop != null ? new AnjoFileRepositoryPanel(new BorderLayout(), onDrop) : new JPanel(new BorderLayout());
+            master.setMinimumSize(new Dimension(width, height));
+            master.setPreferredSize(new Dimension(width, height));
+            ScalingImagePanel imagePanel = new ScalingImagePanel(image);
+            JPanel contentPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints imageConstraints = new GridBagConstraints();
+            imageConstraints.gridx = 0;
+            imageConstraints.gridy = 0;
+            imageConstraints.weightx = 1.0;
+            imageConstraints.weighty = 1.0;
+            imageConstraints.fill = GridBagConstraints.BOTH;
+            contentPanel.add(imagePanel, imageConstraints);
+            imageConstraints.gridy = 1;
+            imageConstraints.weighty = 0.0;
+            imageConstraints.fill = GridBagConstraints.HORIZONTAL;
+            imageConstraints.anchor = GridBagConstraints.PAGE_END;
+            contentPanel.add(componentsPanel, imageConstraints);
+            master.add(contentPanel, BorderLayout.CENTER);
+            master.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            pane.setResult(new AnjoConfirmDialog(master, title, optionType, image).getResult());
+        } else {
+            componentsPanel.setMinimumSize(new Dimension(width, height));
+            componentsPanel.setPreferredSize(new Dimension(width, height));
+            pane.setResult(new AnjoConfirmDialog(componentsPanel, title, optionType, null).getResult());
+        }
+        if (image != null && Taskbar.isTaskbarSupported() && changeTaskbarIcon) {
+            Taskbar taskbar = Taskbar.getTaskbar();
+            if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE))
+                taskbar.setIconImage(image);
+        }
         return pane;
     }
 

@@ -1,6 +1,7 @@
 package me.anjoismysign.anjo.libraries;
 
 import javax.swing.*;
+import java.util.Locale;
 
 /**
  * @author anjoismysign
@@ -69,7 +70,7 @@ public class PanelLib {
      */
     public static boolean confirm(String title, String message, String errorMessage) {
         String input = PanelLib.requestString(message + " \nType 'yes' or 'no'", errorMessage);
-        String lowercased = input.toLowerCase();
+        String lowercased = input.toLowerCase(Locale.ROOT);
         if (!lowercased.equals("yes") && !lowercased.equals("no")) {
             PanelLib.showMessage(title, "'" + input + "' is neither 'yes' or 'no'");
             return confirm(title, message);

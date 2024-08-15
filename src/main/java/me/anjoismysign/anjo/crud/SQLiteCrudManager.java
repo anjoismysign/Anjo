@@ -170,6 +170,10 @@ public class SQLiteCrudManager<T extends Crudable> implements SQLCrudManager<T> 
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
+                if (bytes == null) {
+                    log("Record with id " + id + " has no data.");
+                    return replacement.get();
+                }
                 @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
                 crudable = updatableSerializable.getValue();
                 log("Read record with id " + id + " successfully.");

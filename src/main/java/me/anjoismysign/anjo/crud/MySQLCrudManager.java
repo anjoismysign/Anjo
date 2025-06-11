@@ -1,9 +1,8 @@
 package me.anjoismysign.anjo.crud;
 
-import me.anjoismysign.anjo.entities.UpdatableSerializable;
-import me.anjoismysign.anjo.entities.UpdatableSerializableHandler;
 import me.anjoismysign.anjo.logger.Logger;
 import me.anjoismysign.anjo.sql.SQLHolder;
+import me.anjoismysign.anjo.util.SerializableUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -105,26 +104,25 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
      */
     @Override
     public void update(T crudable, int version) {
-        UpdatableSerializableHandler<T> handler = newUpdatable(crudable, 0);
         String id = crudable.getIdentification();
         PreparedStatement statement = this.holder.getDatabase()
                 .updateDataSet(getPrimaryKeyName(), getTableName(), crudableKeyTypePrepareStatement());
         try {
-            statement.setBytes(1, handler.serialize());
+            statement.setBytes(1, SerializableUtil.serialize(crudable));
             statement.setString(2, id);
             statement.executeUpdate();
             if (version != 0)
                 log("Updated record with id " + id + " to version " + version + ".");
             else
                 log("Updated record with id " + id + ".");
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         } finally {
             try {
                 statement.close();
                 statement.getConnection().close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
             }
         }
     }
@@ -154,14 +152,14 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 preparedStatement.close();
                 preparedStatement.getConnection().close();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         } finally {
             if (connection != null)
                 try {
                     connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                } catch (SQLException exception) {
+                    exception.printStackTrace();
                 }
         }
         return crudable;
@@ -204,8 +202,7 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 resultSet.close();
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-                @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
-                crudable = updatableSerializable.getValue();
+                crudable = (T) SerializableUtil.deserialize(bytes);
                 log("Read record with id " + id + " successfully.");
                 return crudable;
             } else {
@@ -215,14 +212,14 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
                 resultSet.getStatement().getConnection().close();
                 return replacement.get();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         } finally {
             try {
                 resultSet.getStatement().close();
                 resultSet.getStatement().getConnection().close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
             }
         }
         return replacement.get();
@@ -251,14 +248,14 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
             preparedStatement.setString(1, id);
             preparedStatement.executeUpdate();
             log("Deleted record with id " + id + ".");
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         } finally {
             try {
                 preparedStatement.close();
                 preparedStatement.getConnection().close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
             }
         }
     }
@@ -266,16 +263,16 @@ public class MySQLCrudManager<T extends Crudable> implements SQLCrudManager<T> {
     /**
      * @param biConsumer First parameter is Crudable, second parameter is the version
      */
-    public void forEachRecord(BiConsumer<T, Integer> biConsumer) {
+    @Override
+    public void forEachRecord(Consumer<T> biConsumer) {
         this.holder.getDatabase().selectAllFromDatabase(getTableName(), resultSet -> {
             try {
                 byte[] bytes = resultSet.getBytes(getCrudableKeyTypeName());
-                @SuppressWarnings("unchecked") UpdatableSerializable<T> updatableSerializable = UpdatableSerializable.deserialize(bytes);
-                T crudable = updatableSerializable.getValue();
+                T crudable = (T) SerializableUtil.deserialize(bytes);
                 log("Read record with id " + crudable.getIdentification() + ".");
-                biConsumer.accept(crudable, updatableSerializable.getVersion());
-            } catch (SQLException e) {
-                e.printStackTrace();
+                biConsumer.accept(crudable);
+            } catch (SQLException exception) {
+                exception.printStackTrace();
             }
         });
     }

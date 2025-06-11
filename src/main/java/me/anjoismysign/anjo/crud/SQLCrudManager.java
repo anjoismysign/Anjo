@@ -23,11 +23,7 @@ public interface SQLCrudManager<T extends Crudable> extends CrudManager<T> {
 
     void update(T crudable, int version);
 
-    default void forEachRecord(Consumer<T> consumer) {
-        forEachRecord((crudable, version) -> consumer.accept(crudable));
-    }
-
-    void forEachRecord(BiConsumer<T, Integer> biConsumer);
+    void forEachRecord(Consumer<T> biConsumer);
 
     void reload();
 }

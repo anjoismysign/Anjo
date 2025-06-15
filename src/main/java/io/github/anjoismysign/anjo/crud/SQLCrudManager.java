@@ -1,0 +1,28 @@
+package io.github.anjoismysign.anjo.crud;
+
+import java.sql.Connection;
+import java.util.function.Consumer;
+
+public interface SQLCrudManager<T extends Crudable> extends CrudManager<T> {
+    String getCrudableKeyTypeName();
+
+    String getTableName();
+
+    String getPrimaryKeyName();
+
+    default String crudableKeyTypePrepareStatement() {
+        return getCrudableKeyTypeName() + "=?";
+    }
+
+    int getPrimaryKeyLength();
+
+    Connection getConnection();
+
+    boolean exists(String primary_key_id);
+
+    void update(T crudable, int version);
+
+    void forEachRecord(Consumer<T> biConsumer);
+
+    void reload();
+}
